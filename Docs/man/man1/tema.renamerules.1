@@ -1,0 +1,19 @@
+.TH TEMA.RENAMERULES 1 local
+.SH NAME
+tema.renamerules \- Rename rules in rules file
+.SH SYNOPSIS
+.B tema.renamerules [target]
+.SH DESCRIPTION
+.I Tema.renamerules
+is used to rename rules in rules file generated with tema.rextendedrules for
+multitarget models.
+.SH ARGUMENTS
+.TP
+.B target
+Possible target name to use. Target is prepended to all rules that are renamed.
+.SH EXAMPLES
+.TP
+.B tema.renamerules Emulator < rules.ext > rules.ext.renamed
+Rename rules in file rules.ext. Use Emulator as target.
+.SH SEE ALSO
+tema.rextendedrules(1)

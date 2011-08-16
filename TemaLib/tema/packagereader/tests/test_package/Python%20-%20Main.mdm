@@ -1,0 +1,43 @@
+[actions: comment, interesting, name]
+0: interesting, true, awRefinedInteresting
+1: \0, \N/A, awRefinedNotinteresting
+2: \0, true, awNotrefined
+3: \0, \N/A, notaw
+
+
+[properties: value]
+grid_size: 32
+init_marker: \N/A
+initial_state: 0
+name: Action\ Machine\ 3
+snap_to_grid: true
+
+[properties: bendpoints[]]
+init_marker: 
+
+[properties: location[]]
+init_marker: 16, 16
+
+[properties: size[]]
+init_marker: 33, 33
+
+
+[stateattributes: comment, interesting, name]
+0: interesting, true, svRefinedInteresting
+1: \0, \N/A, svRefinedNotinteresting
+2: \0, true, svNotrefined
+3: \0, \N/A, notsv
+
+
+[states]
+0
+
+[states: attributes[]]
+
+[states: location[]]
+0: 64, 64
+
+[states: size[]]
+0: 65, 65
+
+

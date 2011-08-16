@@ -1,0 +1,66 @@
+.TH TEMA.RUNMODELPACKAGE 1 local
+.SH NAME
+tema.runmodelpackage \- Helper program to run TEMA model packages
+.SH SYNOPSIS
+.B tema.runmodelpackage
+MODELPACK.zip|MODELPACKDIR
+.RB [ " options " ]
+.SH DESCRIPTION
+.I Tema.runmodelpackage 
+executes models generated with tema.modeldesigner. Uses 'guiguidance' as 
+default guidance and 'guiadapter' as default adapter. If they are not 
+available, uses 'randomguidance' and 'socketserveradapter'.
+.SH ARGUMENTS
+.TP
+MODELPACK.zip|MODELPACKDIR
+Either modelpackage zipfile exported from tema.modeldesigner or already 
+extracted modelpackage
+.SH OPTIONS
+.TP
+.B \-h, \--help
+Show help message and exit
+.TP
+.B \--runonport=PORT
+Shortcut to start socketserveradapter on the given port. Overrides adapter and
+adapter-args.
+.TP
+.B \--devices=DEVICES
+The name(s) of the device(s) to use in the test run. Space-separated. 
+Default: all the devices in the package
+.TP
+.B \--products=PRODUCTS
+The name(s) of the product(s) to use in the test run. Space-separated.
+Default: all the products in the package
+.TP
+.B \--exclude=EXCLUDE
+List of files to exclude from target and testrun.
+.TP
+.B \--notestconf
+Don't run generate-testconf. Only unpack model package and generate
+testconfiguration file.
+.TP
+.B \--nomake
+Don't create a new target. Use the existing one.
+.TP
+.B \--norun
+Don't run the package. Just create a runnable target.
+.TP
+.B \--nodevice
+Run the modelpackage on a testadapter instead of a (real or simulated) device.
+Overrides --adapter.
+.TP
+.B \--deviceperproduct
+Use only one device per product.
+.TP
+.B Options to testengine
+Tema.runmodelpackage passes through options to tema.testengine
+.SH EXAMPLE
+.TP
+.B tema.runmodelpackage EXAMPLE_MODEL.zip
+Runs modelpackage EXAMPLE_MODEL.zip with all devices and all products in model
+package.
+.TP
+.B tema.runmodelpackage EXAMPLE_MODEL.zip --devices=TestDevice --guidance=randomguidance --runonport=9090
+Runs modelpackage EXAMPLE_MODEL.zip with device TestDevice on port 9090. Guidance argument is passed through to testengine
+.SH SEE ALSO
+tema.modeldesigner(1), tema.testengine(1)

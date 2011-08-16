@@ -1,0 +1,35 @@
+Begin Lsts
+
+Begin History
+End History
+
+Begin Header
+ State_cnt = 7
+ Action_cnt = 9
+ Transition_cnt = 9
+ Initial_states = 1;
+End Header
+
+Begin Action_names
+ 1 = "start_awActivate<TaskSwitcherGEN>"
+ 2 = "end_awActivate<TaskSwitcherGEN>"
+ 3 = "kw_LaunchApp 'TaskSwitcherGEN'"
+ 4 = "start_awActivate<model1>"
+ 5 = "end_awActivate<model1>"
+ 6 = "kw_LaunchApp 'model1'"
+ 7 = "start_awActivate<model2>"
+ 8 = "end_awActivate<model2>"
+ 9 = "kw_LaunchApp 'model2'"
+End Action_names
+
+Begin Transitions
+ 1: 2,1 4,4 6,7;
+ 2: 3,3;
+ 3: 1,2;
+ 4: 5,6;
+ 5: 1,5;
+ 6: 7,9;
+ 7: 1,8;
+End Transitions
+
+End Lsts

@@ -1,0 +1,68 @@
+Begin Lsts
+
+Begin History
+
+ 1
+ "model3-rm.lsts"
+ "12.04.2007 16:03 <command line not given>"
+ "States: 9. Transitions: 14."
+
+End History
+
+Begin Header
+
+ State_cnt = 9
+ Action_cnt = 12
+ Transition_cnt = 14
+ Initial_states = 1;
+
+End Header
+
+Begin Action_names
+
+ 1 = "start_awAction1"
+ 2 = "end_awAction1"
+ 3 = "start_awAction2"
+ 4 = "end_awAction2"
+ 5 = "kw_DoSomething"
+ 6 = "awAction2"
+ 7 = "xwIllegal"
+ 8 = "kw_return true"
+ 9 = "kw_Test §PP"
+ 10 = "kw_Test $(data"
+ 11 = "kw_Test $(else:)$"
+ 12 = "--comment"
+
+End Action_names
+
+Begin Transitions
+
+ 1:1,6{"339"} 3,1;
+ 2: 5,1 7,3;
+ 3: 4,5;
+ 4:4,0{"113"} 2,2;
+ 5: 6,5 1,12;
+ 6:6,7{"159"} 1,2;
+ 7: 9,8;
+ 8: 2,4;
+ 9: 8,5;
+
+End Transitions
+
+Begin Layout
+
+ 1 128 128
+ 2 256 192
+ 3 192 192
+ 4 192 256
+ 5 128 64
+ 6 64 128
+ 7 256 256
+ 8 320 192
+ 9 320 256
+
+End Layout
+
+End Lsts
+
+ "Run time: less than 5 sec."

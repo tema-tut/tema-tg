@@ -1,0 +1,24 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+DEB_PYTHON_SYSTEM := pysupport
+DEB_COMPRESS_EXCLUDE := .pdf
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/python-distutils.mk
+
+clean::
+	rm -rf build build-stamp configure-stamp build/ MANIFEST
+	dh_clean
+
+install/tema-tg::
+	[ -d debian/tema-tg/usr/share/doc/tema-tg ] || mkdir -p debian/tema-tg/usr/share/doc/tema-tg
+	$(MAKE) htmldoc
+	cp -f README.html debian/tema-tg/usr/share/doc/tema-tg/README.html
+	$(MAKE) pdfdoc
+	cp -f README.pdf debian/tema-tg/usr/share/doc/tema-tg/README.pdf
+	rst2html TemaLib/tema/ats4appmodel/readme.txt >  debian/tema-tg/usr/share/doc/tema-tg/ats4appmodel2lsts.html
+	cp -f TemaLib/tema/ats4appmodel/readme.txt debian/tema-tg/usr/share/doc/tema-tg/ats4appmodel2lsts.txt
+	$(MAKE) latexdocs
+	cp -f Docs/testengine-for-developers/testengine-for-developers.pdf debian/tema-tg/usr/share/doc/tema-tg
+	cp -f Docs/ssprotocol/ssprotocol.pdf debian/tema-tg/usr/share/doc/tema-tg

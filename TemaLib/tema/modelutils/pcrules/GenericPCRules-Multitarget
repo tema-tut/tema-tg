@@ -1,0 +1,55 @@
+# Copyright (c) 2006-2010 Tampere University of Technology
+# 
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+# 
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+# SLEEPtgts WAKEtgtsCANWAKE WAKEtgtsWAKE
+
+(TargetSwitcher${.*},"${SLEEPtgts|WAKEtgtsCANWAKE|WAKEtgtsWAKE}<${.*}>") ($=3./TaskSwitcher${.*},"${$=2.}") -> "$=2.<$=3.>"
+
+# SLEEPtgt - WAKEtgt - TargetSwitcher
+
+(${.*}/${.*},"SLEEPtgt<${.*}>") (${(?!$=1.).*}/${.*},"${WAKEtgt}<$=3.>") ($=1./TaskSwitcher${.*},"TARGET_DEACTIVATED") ($=4./TaskSwitcher${.*},"TARGET_ACTIVATED<$=5.>") (TargetSwitcher${.*},"ACTIVATED<$=4.>") -> "$=1. ACTIVATES $=4.: $=3."
+(${.*}/${.*},"SLEEPtgt<${.*}>") (${$=1.}/${.*},"${WAKEtgt}<$=3.>") ($=1./TaskSwitcher${.*},"ACTIVATED<$=5.>") -> "$=2. ACTIVATES $=5.: $=3."
+(${.*}/${.*},"SLEEPtgt<${.*}>") (Synchronizer,"${WAKEtgt}<$=3.>") ($=1./TaskSwitcher${.*},"TARGET_DEACTIVATED") -> "$=1. ACTIVATES Synchronizer: $=3."
+(Synchronizer,"SLEEPtgt<${.*}>") (${.*}/${.*},"${WAKEtgt}<$=1.>") ($=2./TaskSwitcher${.*},"TARGET_ACTIVATED<$=3.>") -> "Synchronizer ACTIVATES $=2.: $=1."
+
+
+# REQtgt - ALLOWtgt
+
+(${.*}/${.*},"REQtgt<${.*}>") (${.*}/${.*},"${ALLOWtgt}<$=3.>") -> "$=4./$=5. ALLOWS $=1./$=2.: $=3."
+(Synchronizer,"REQtgt<${.*}>") (${.*}/${.*},"${ALLOWtgt}<$=1.>") -> "$=2./$=3. ALLOWS Synchronizer: $=1."
+
+# REQALLtgt - (ALL) ALLOWtgt
+
+(${.*}/${.*},"REQALLtgt<${.*}>") ALL(${(?!$=1./$=2.$).*},"ALLOWtgt<$=3.>") -> "$=1./$=2. WAS ALLOWED: $=3."
+(Synchronizer,"REQALLtgt<${.*}>") ALL(${(?!Synchronizer$).*},"ALLOWtgt<$=1.>") -> "Synchronizer WAS ALLOWED: $=1."
+
+
+# keywords
+
+(${TargetSwitcher-rm|Synchronizer-rm},"${~?}${[kv]}w${.*}") -> "$=2.$=3.w$=4."
+(${TargetSwitcher-rm|Synchronizer-rm},"${~?}${[a-zA-Z0-9_]+}:${[kv]}w${.*}") -> "$=2.$=3.:$=4.w$=5."
+
+# action word refinements
+
+(${TargetSwitcher$|Synchronizer$},"${start|~?end}${.*}") (${$=1.-rm.*},"$=2.$=3.") -> "$=1.:$=2.$=3."
+
+# end of multitarget rules

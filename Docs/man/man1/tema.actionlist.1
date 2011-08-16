@@ -1,0 +1,31 @@
+.TH TEMA.ACTIONLIST 1 local
+.SH NAME
+tema.actionlist \- List all actions in test model
+.SH SYNOPSIS
+.B tema.actionlist
+[ filename ]
+.RB [ "options" ]
+.SH DESCRIPTION
+.I Tema.actionlist
+can be used to extract information about available actions from test model.
+.SH ARGUMENTS
+.TP
+.B filename
+Name of the rules file. If no filename is given or filename is -, reads from 
+standard input.
+.SH OPTIONS
+.B \-h, \--help
+Show help message and exit
+.TP
+.B \--keywords
+List also keywords in addition to action words
+.TP
+.B \-v,\--verbose
+Be more verbose
+.SH EXAMPLES
+.TP
+.B tema.actionlist combined-rules.ext
+Read actions from multitarget model combined-rules.ext
+.TP
+.B tema.actionlist --keywords --verbose < rules.ext
+Read action words and keywrods from rules file rules.ext

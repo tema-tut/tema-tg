@@ -1,0 +1,69 @@
+Begin Lsts
+
+Begin History
+
+ 1
+ "model1-awgt.lsts"
+ "17.04.2007 14:10 <command line not given>"
+ "States: 11. Transitions: 22."
+
+End History
+
+Begin Header
+
+ State_cnt = 11
+ Action_cnt = 9
+ Transition_cnt = 22
+ Initial_states = 1;
+
+End Header
+
+Begin Action_names
+
+ 1 = "ALLOW<ToStart>"
+ 2 = "WAKEts"
+ 3 = "SLEEPts"
+ 4 = "SLEEPapp<ToModel2>"
+ 5 = "start_awAction1"
+ 6 = "end_awAction1"
+ 7 = "start_awAction2"
+ 8 = "end_awAction2"
+ 9 = "~end_awAction2"
+
+End Action_names
+
+Begin Transitions
+
+ 1:1,1{"33"} 2,2;
+ 2: 1,3 1,4 3,5;
+ 3: 4,6;
+ 4: 5,3 6,7 7,5;
+ 5: 4,2 1,1;
+ 6: 4,8 2,9;
+ 7: 8,6;
+ 8: 9,3 10,7 11,5;
+ 9: 8,2 1,1;
+ 10: 8,8 2,9;
+ 11: 2,6;
+
+End Transitions
+
+Begin Layout
+
+ 1 512 448
+ 2 384 512
+ 3 384 384
+ 4 448 320
+ 5 512 384
+ 6 448 384
+ 7 384 320
+ 8 320 384
+ 9 448 448
+ 10 256 448
+ 11 320 448
+
+End Layout
+
+End Lsts
+
+ "Run time: less than 5 sec."

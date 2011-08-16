@@ -1,0 +1,27 @@
+.TH TEMA.PACKAGEREADER 1 local
+.SH NAME
+tema.packagereader \- Read information about mdd-file 
+.SH SYNOPSIS
+.B tema.packagereader
+.RB < mddFilePath >
+.RB < id >
+.RB < params >
+.SH DESCRIPTION
+.I Tema.packagereader
+reads various information about model package from mdd-file.
+.SH ARGUMENTS
+.TP
+.B mddFilePath
+Path to the mdd file of the model package.
+.TP
+.B id
+Identifier of the information being sought. Run tema.packagereader for list of
+recognized ids.
+.TP
+.B params
+Additional id-specific parameters. Run tema.packagereader for list of all 
+parameters
+.SH EXAMPLES
+.TP
+.B tema.packagereader testmodel.mdd products
+ExampleProduct

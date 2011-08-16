@@ -1,0 +1,48 @@
+.TH TEMA.COMPOSEMODEL 1 local
+.SH NAME
+tema.composemodel \- Compose test model
+.SH SYNOPSIS
+.B tema.composemodel
+[ filename ]
+.SH DESCRIPTION
+.I Tema.composemodel
+is used to compose test model. Tema.composemodel reads configuration file
+and produces runnable test model.
+.SH ARGUMENTS
+.TP
+.B filename
+Configuration file. If no filename is given, reads configuration from
+file 'compose.conf'. If filename is -, reads from standard input.
+.SH FILE FORMAT
+Multi-format. This format is used to combine multiple single-format models. 
+.nf
+    [targets: conffile]
+    TestTarget1: compose.conf
+    TestTarget2: compose.conf
+
+    [general: value]
+    type: multi
+    result: combined-rules.ext
+.fi
+
+Single-format. This format is used to compose single models. Taskswitcher will
+not be generated automatically, if taskswitchergen and taskswitchergenrm are
+left out.
+.nf
+    [targets: type]
+    TestTarget1: Emulator21
+    
+    [targets: actionmachines[]]
+    TestTarget1: actionmachine1.lsts,actionmachine2.lsts
+    
+    [general: value]
+    type: single
+    result: rules.ext
+    taskswitchergen: TaskSwitcherGEN
+    taskswitchergenrm: TaskSwitcherGEN-rm
+.fi
+.SH EXAMPLES
+.TP
+.B tema.composemodel compose.conf
+.SH SEE ALSO
+.IR tema.testengine (1)

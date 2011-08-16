@@ -1,0 +1,43 @@
+Begin Lsts
+
+Begin History
+End History
+
+Begin Header
+ State_cnt = 14
+ Action_cnt = 10
+ Transition_cnt = 25
+ Initial_states = 1;
+End Header
+
+Begin Action_names
+ 1 = "ALLOW<ToStart>"
+ 2 = "WAKEtsCANWAKE"
+ 3 = "WAKEtsWAKE"
+ 4 = "SLEEPts"
+ 5 = "SLEEPapp<ToModel2>"
+ 6 = "start_awAction1"
+ 7 = "end_awAction1"
+ 8 = "start_awAction2"
+ 9 = "end_awAction2"
+ 10 = "~end_awAction2"
+End Action_names
+
+Begin Transitions
+ 1: 1,1 2,2;
+ 2: 3,3;
+ 3: 1,4 1,5 4,6;
+ 4: 5,7;
+ 5: 6,4 7,8 8,6;
+ 6: 1,1 14,2;
+ 7: 5,9 3,10;
+ 8: 9,7;
+ 9: 10,4 11,8 12,6;
+ 10: 1,1 13,2;
+ 11: 9,9 3,10;
+ 12: 3,7;
+ 13: 9,3;
+ 14: 5,3;
+End Transitions
+
+End Lsts

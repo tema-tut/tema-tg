@@ -1,0 +1,30 @@
+.TH TEMA.VARIABLEMODELCREATOR 1 local
+.SH NAME
+tema.variablemodelcreator \- Generate variable model
+.SH SYNOPSIS
+.B tema.variablemodelcreator
+[ input_file ]
+.RB [ "options" ]
+.SH DESCRIPTION
+.I Tema.variablemodelcreator
+generates variable models and interface model from a list of variables
+.SH ARGUMENTS
+.TP
+.B input_file
+File that defines models that will be created.
+.SH OPTIONS
+.B \-h, \--help
+Show help message and exit
+.TP
+.B \-o OUTDIR, \--output=OUTDIR
+Output path of the generated variable models.
+.TP
+.B \i,\--interface
+Generate a common interface model for the variables.
+.SH FILE FORMAT
+.nf
+    Variable1Name: value1,value2,value3
+    Variable2Name: (UnknownValue),value1,value2
+.fi
+.TP
+First value in the list is the initial value. Value enclosed with parenthesis is the unknown value.

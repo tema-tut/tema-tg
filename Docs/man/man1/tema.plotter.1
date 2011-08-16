@@ -1,0 +1,60 @@
+.TH TEMA.PLOTTER 1 local
+.SH NAME
+tema.plotter \- Plot TemaTool logs with gnuplot
+.SH SYNOPSIS
+.B tema.plotter
+[ plotdatafiles ]
+.RB [ " options " ]
+.SH DESCRIPTION
+.I Tema.plotter 
+reads 
+.I gnuplot 
+datafiles generated with 
+.B tema.logreader -p
+and outputs commands that can be given to
+.I gnuplot
+as input.
+.SH ARGUMENTS
+.TP
+.B plotdatafiles
+Filenames of gnuplot datafiles. If no filename is given or filename is -, 
+reads from standard input.
+.SH OPTIONS
+.TP
+.B \-h, \--help
+Show help message and exit
+.TP
+.B \-x X, \--x=X
+X column type: 'kw', 't', 'aw', ...
+.TP
+.B \-y Y, \--y=Y
+Y column type: 'awcov', 'switches', ...
+.TP
+.B \--until=COL:VAL
+Data is read until the value of COL >= VAL. Eg. 's:10'
+.TP
+.B \--bar
+Draws bar graphs
+.TP
+.B \--barsat=VALUES
+Draw bars at certain values of x. Eg. 100,200,300
+.TP
+.B \--term=TERM
+gnuplot terminal type. default: 'png'
+.TP
+.B \--custom=CUSTOM
+custom set string passed to gnuplot, eg. 'set a; set b;'
+.TP
+.B \--with=WITHSTR
+ 'with' string for gnuplot plot statement, default: lines
+.TP
+.B \-l, \--listcols
+list the available column types and exit.
+.SH EXAMPLES
+.TP
+.B tema.logreader file.log -p | tema.plotter -x t -y aw | gnuplot > img.png
+Create png image from logfile with gnuplot. Display time elapsed (-x t) in 
+x-axis and number of executed action words (-y aw) in y-axis.
+
+.SH SEE ALSO
+tema.logreader(1), gnuplot(1)

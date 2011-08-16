@@ -1,0 +1,50 @@
+Begin Lsts
+
+Begin History
+
+ 1
+ "model2-rm.lsts"
+ "11.04.2007 13:56 <command line not given>"
+ "States: 4. Transitions: 4."
+
+End History
+
+Begin Header
+
+ State_cnt = 4
+ Action_cnt = 4
+ Transition_cnt = 4
+ Initial_states = 1;
+
+End Header
+
+Begin Action_names
+
+ 1 = "kw_DoSomething $(x='§'; y='$('; z=')' + '$'; a.b(c))$"
+ 2 = "kw_DoSomethingElse §)$$(§"
+ 3 = "start_awAction"
+ 4 = "end_awAction"
+
+End Action_names
+
+Begin Transitions
+
+ 1: 2,3;
+ 2: 3,1;
+ 3: 4,2;
+ 4: 1,4;
+
+End Transitions
+
+Begin Layout
+
+ 1 128 256
+ 2 192 192
+ 3 192 256
+ 4 192 320
+
+End Layout
+
+End Lsts
+
+ "Run time: less than 5 sec."

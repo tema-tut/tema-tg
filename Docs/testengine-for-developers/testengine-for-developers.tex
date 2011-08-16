@@ -1,0 +1,413 @@
+\documentclass{article}
+\usepackage[british]{babel}
+
+\title{TEMA Test Engine for Developers}
+\author{Antti Kervinen}
+
+\begin{document}
+
+\newcommand{\modulename}[1]{\texttt{#1}}
+\newcommand{\classname}[1]{\textsc{\texttt{#1}}}
+\newcommand{\methodname}[1]{\textbf{\texttt{#1}}}
+\newcommand{\spec}[1]{\textbf{#1}}
+\newenvironment{quot}{\begin{quote}\vspace{-3mm}}{\end{quote}}
+\newcommand{\note}[1]{\flushleft\small\fbox{\begin{minipage}{0.8\linewidth}#1\end{minipage}}}
+
+
+\section{Introduction}
+
+This document specifies the most essential interfaces inside the TEMA
+test engine.
+
+\section{Model interface}
+
+The model interface hides test modelling formalism. This allows using
+several modelling formalisms with the test engine and even mixing
+them.
+
+\subsection{Classes and methods}
+
+\classname{Model} class
+\begin{itemize}
+\item[] \methodname{loadFromFile}(filelikeobj)
+  \begin{quot}
+    This method is called before any other methods.\\
+    \spec{Args:} filelikeobj is usually \classname{file} object. If
+    not, it should at least implement the methods that are used for
+    reading the ``file'' contents in the \methodname{loadFromFile}
+    (typically
+    \methodname{read} or \methodname{readline}).\\
+    \spec{Returns:} -\\
+    \spec{Exceptions:} may pass IOErrors and other problems in
+    reading the file.
+  \end{quot}
+\item[] \methodname{getInitialState()}\\
+  \begin{quot}
+    \spec{Args:} -\\
+    \spec{Returns:} a \classname{State} object that represents the starting state of the model.\\
+    \spec{Exceptions:} -
+  \end{quot}
+\item[] \methodname{getActions()}\\
+  \begin{quot}
+    \spec{Args:} -\\
+    \spec{Returns:} a list of \classname{Action} objects. The list
+    contains all possible actions that may in the model.
+    \\
+    \spec{Exceptions:} -
+  \end{quot}
+\end{itemize}
+
+\noindent{}\classname{State} class --- represents a state of the model
+\begin{itemize}
+\item[] \methodname{getOutTransitions}()
+  \begin{quot}
+    \spec{Args:} -\\
+    \spec{Returns:} an iterable set of \classname{Transition} objects.
+    The actions of the transitions specify the events that can occur
+    in this state, and the destination states of the transitions
+    specify the states after the events.
+    \\
+    \spec{Exceptions:} -
+  \end{quot}
+\item[] \methodname{equals}(\classname{State} object)
+  \begin{quot}
+    \spec{Args:} a \classname{State} object\\
+    \spec{Returns:} a boolean value that is true iff the state given
+    as a parameter represents the same state as this object.
+    \\
+    \spec{Exceptions:} -
+  \end{quot}
+\item[] \methodname{\_\_str\_\_}()
+\end{itemize}
+
+\noindent{}\classname{Transition} class --- represents a transition
+from a state to another in the model
+\begin{itemize}
+\item[] \methodname{getAction}()
+  \begin{quot}
+    \spec{Args:} -\\
+    \spec{Returns:} the \classname{Action} object associated with
+    the transition.
+    \\
+    \spec{Exceptions:} -
+  \end{quot}
+\item[] \methodname{getSourceState}()
+  \begin{quot}
+    \spec{Args:} -\\
+    \spec{Returns:} the \classname{State} object from which the
+    transition can be executed. The state is the only state that
+    returns the transition when its \methodname{getOutTransitions} is
+    called.
+    \\
+    \spec{Exceptions:} -
+  \end{quot}
+\item[] \methodname{getDestState}()
+  \begin{quot}
+    \spec{Args:} -\\
+    \spec{Returns:} the \classname{State} object to which the
+    transition leads.
+    \\
+    \spec{Exceptions:} -
+  \end{quot}
+\item[] \methodname{equals}(\classname{Transition} object)
+  \begin{quot}
+    \spec{Args:} a \classname{Transition} object\\
+    \spec{Returns:} a boolean value that is true iff the transition
+    given as a parameter represents the same transition as this
+    object.
+    \\
+    \spec{Exceptions:} -
+  \end{quot}
+\item[] \methodname{\_\_str\_\_}()
+\end{itemize}
+
+\noindent{}\classname{Action} class --- represents an action
+\begin{itemize}
+\item[] \methodname{toString}()
+  \begin{quot}
+    \spec{Args:} -\\
+    \spec{Returns:} a string representation of the action.
+    \\
+    \spec{Exceptions:} -
+  \end{quot}
+\item[] \methodname{isKeyword}()
+  \begin{quot}
+    \spec{Args:} -\\
+    \spec{Returns:} a boolean that is true iff the action is a
+    keyword, that is, it should be sent to the SUT when the test is
+    executed. Non-keyword actions can be exected without notifying the
+    SUT.
+    \\
+    \spec{Exceptions:} -
+  \end{quot}
+\item[] \methodname{equals}(\classname{Action} object)
+  \begin{quot}
+    \spec{Args:} an \classname{Action} object\\
+    \spec{Returns:} a boolean value that is true iff the action given
+    as a parameter represents the same action as this object.
+    \\
+    \spec{Exceptions:} -
+  \end{quot}
+\item[] \methodname{\_\_str\_\_}()
+\end{itemize}
+
+
+\subsection{Example of usage}
+
+LSTS model interface:
+\begin{verbatim}
+m = lstsmodel.Model()
+m.loadFromFile( file("exampledata/BobTelephone.lsts") )
+
+istate = m.getInitialState()
+print "The initial state of BobTelephone.lsts is: %s" % (str(istate),)
+
+for t in istate.getOutTransitions():
+    print "Action %s can be executed in the initial state" % (t.getAction(),)
+\end{verbatim}
+
+
+\subsection{Available implementations}
+
+\begin{itemize}
+\item \modulename{lstsmodel.py} implements model interface for LSTS
+  files.
+\item \modulename{parallelmodel.py} implements model interface for
+  parallel composition of any objects that implement the model
+  interface.
+\item \modulename{parallellstsmodel.py} implements model interface for
+  parallel composition of LSTSes with \modulename{parallelmodel.py}.
+\item \modulename{tracelogmodel.py} implements model interface for
+  test logs. This can be used for repeating or investigating a
+  previously run test: the test log can be used as a linear test model
+  in the new test run or simulation / visualisation tool.
+\item (not in real use at the time of writing this document)
+  \modulename{prepostmodel.py} implements model interface for a
+  precondition / postcondition formalism that is strongly based on
+  Python.
+\end{itemize}
+
+\section{Coverage interface}
+
+Coverage interface implements a function that maps sequences of
+executed transitions to objects that tell how much of the required
+coverage has been achieved.
+
+\subsection{Classes and methods}
+
+\noindent{}\classname{Coverage} class --- implements a test generation
+algorithm
+ 
+\begin{itemize}
+\item[] \methodname{\_\_init\_\_}([covspec, [model=\classname{Model} object]])
+  \begin{quot}
+    \spec{Args:} Optional argument covspec, passes coverage language
+    statement when requirement coverage in \modulename{clparser.py} is
+    used. The other optional argument is the \classname{Model} object.\\
+    \spec{Returns:} -\\
+    \spec{Exceptions:} -
+    \note{TODO: initialization of the coverage differs from other
+      plugins. Testengine should be changed to accept arguments
+      \texttt{--coverage=requirementcoverage --coverage-args="actions
+        start\_aw.* then actions kw.*"} and \texttt{
+        --coverage=statecoverage}. The arguments now given to the
+      constructor should be given to the coverage with the standard
+      setParameter() function calls.  }%note
+  \end{quot}
+\item[] \methodname{markExecuted}(\classname{Transition} object)
+  \begin{quot}
+    \spec{Args:} \classname{Transition} object that is considered executed.\\
+    \spec{Returns:} -\\
+    \spec{Exceptions:} -\\
+  \end{quot}
+\item[] \methodname{getPercentage}()
+  \begin{quot}
+    \spec{Args:} -\\
+    \spec{Returns:} a coverage status object whose equality to 1.0
+    must be testable and which should be comparable to other coverage
+    status objects. This can be a floating point number, for example.\\
+    \spec{Exceptions:} -\\
+  \end{quot}
+\item[] \methodname{pickDataValue}(set of possible data values)
+  \begin{quot}
+    If the coverage prefers using some data values over other, this
+    method returns the value in the set. Otherwise it should return
+    None. The returned value can be considered to be covered.\\
+    \spec{Args:} a set of values that can be converted to string\\
+    \spec{Returns:} None or a chosen value converted to string\\
+    \spec{Exceptions:} -
+  \end{quot}
+\item[] \methodname{push}()
+  \begin{quot}
+    Stores the current coverage data to a stack. If the data is
+    stored, \methodname{markExecuted}() and
+    \methodname{pickDataValue}() can be called without affecting the
+    stored data. Calling \methodname{pop}() restores the state of the
+    previous \methodname{push}(). Push and pop calls can be
+    nested. The purpose of these methods is to save memory, because
+    test generation algorithms can avoid making of deep-copies of
+    coverage objects. Coverage class implementations can use more
+    sophisticated data structures to store the
+    current state.\\
+    \spec{Args:} -\\
+    \spec{Returns:} -\\
+    \spec{Exceptions:} -
+  \end{quot}
+\item[] \methodname{pop}()
+  \begin{quot}
+    Restores the coverage object to the stored state that is on the
+    top of the stack and removes the state from the stack.\\
+    \spec{Args:} -\\
+    \spec{Returns:} -\\
+    \spec{Exceptions:} IndexError (pop from emtpy list)
+  \end{quot}
+\end{itemize}
+
+\subsection{Example of usage}
+
+\begin{verbatim}
+# init
+c = coveragemodule.Coverage("actions .*", modelobject)
+# see which action gives the best coverage
+scores = []
+current_state = modelobject.getInitialState()
+for t in current_state.getOutTransitions():
+    c.push()
+    c.markExecuted(t)
+    scores.append((c.getPercentage(), t.getAction()))
+    c.pop()
+scores.sort()
+print "best score: %s with action %s" % (scores[-1],)
+\end{verbatim}
+Yet this \textbf{would} be better init:
+\begin{verbatim}
+c = coveragemodule.Coverage()
+c.setParameter("model", modelobject)
+c.setParameter("requirement", "actions start_aw.* then actions kw.*")
+\end{verbatim}
+
+\subsection{Command line usage}
+
+Command line arguments related to coverage module
+\begin{itemize}
+\item \texttt{coverage}
+    The coverage module. (If not given, the proper module is guessed based
+    on the \texttt{coveragereq})
+\item \texttt{coveragereq} Coverage language expression (REQUIRED)
+\item \texttt{coveragereq-args} Optional arguments for coverage module
+\end{itemize}
+
+For example:
+\begin{verbatim}
+--coverage='clparser' \
+--coveragereq='actions .*' \
+--coveragereq-args=''
+\end{verbatim}
+
+\subsection{Available implementations}
+
+\begin{itemize}
+\item \modulename{clparser}
+  Coverage language.
+  Example of the language: \texttt{"actions .*"}
+\item \modulename{findnewcoverage}
+  Implements another (``findnew'') coverage language.
+  Example of the language: \texttt{"findnew state"}
+\item \modulename{altercoverage}
+  Coverage module implementing ``find a new action word on another application''
+  kind of heuristic.
+  Example of the accepted language: \texttt{"app1 app2 app3 random"}.
+  The last word in the language is either a number $N=2,3,...$ for
+  $N$-coverage of applications or \texttt{random}.
+\end{itemize}
+
+\section{Guidance interface}
+
+Test generation algorithms are written behind the guidance
+interface. The algorithms are given a test model (that implements the
+model interface) and a coverage object (that implements the coverage
+interface) as input. In addition to them, several algorithm-specific
+parameters can be passed to the object from the command line.
+
+\subsection{Classes and methods}
+
+\noindent{}\classname{Guidance} class --- implements a test generation
+algorithm
+\begin{itemize}
+\item[] \methodname{setTestModel}(\classname{Model} object)
+  \begin{quot}
+    \spec{Args:}
+    \spec{Returns:}
+    \spec{Exceptions:}
+  \end{quot}
+\item[] \methodname{addRequirement}(\classname{Coverage} object)
+  \begin{quot}
+    \spec{Args:}
+    \spec{Returns:}
+    \spec{Exceptions:}
+  \end{quot}
+\item[] \methodname{prepareForRun}()
+  \begin{quot}
+    \spec{Args:}
+    \spec{Returns:}
+    \spec{Exceptions:}
+  \end{quot}
+\item[] \methodname{suggestAction}(\classname{State} object)
+  \begin{quot}
+    \spec{Args:} a \classname{State} object from the model interface.\\
+    \spec{Returns:} \classname{Action} object (an action must always be returned)\\
+    \spec{Exceptions:}
+  \end{quot}
+\item[] \methodname{markExecuted}(\classname{Transition} object)
+  \begin{quot}
+    \spec{Args:}
+    \spec{Returns:}
+    \spec{Exceptions:}
+  \end{quot}
+\end{itemize}
+
+
+\subsection{Example of usage}
+
+Command line arguments
+\begin{verbatim}
+--guidance-args='lookahead:15,randomseed:hop'
+\end{verbatim}
+
+cause the test engine core to call
+\begin{enumerate}
+\item \methodname{setParameter}(``lookahead'',``15'')
+\item \methodname{setParameter}(``randomseed'',``hop'').
+\end{enumerate}
+
+
+
+\subsection{Available implementations}
+
+\begin{itemize}
+\item \modulename{randomguidance.py} implements a guidance that
+  returns a random transition among the transitions leaving the given
+  state.
+\item \modulename{wrandomguidance.py} weighted random guidance. When
+  transition objects in the model interface implement optional
+  \methodname{getWeight}() method, this guidance algorithm can be used
+  for selecting randomly an outgoing transition where the probability
+  of becoming selected depends on the weight of the transition.
+\item \modulename{gameguidance.py} calculates $n$ steps forward from
+  the given state and returns the transition that leads to the best
+  coverage after the $n$ steps.
+\item \modulename{gameguidance-t.py} threading version of the
+  previous: the possible steps are being continuously calculated in a
+  separate thread in the background.
+\item \modulename{greedyguidance.py} finds the shortest path improving
+  coverage. Requires a \methodname{getExecutionHint} method from its
+  coverage module.
+\item \modulename{weightguidance.py} finds the best path up to a given search
+  depth. Uses \methodname{transitionPoints} method of coverage object if it
+  is available. Similar to \modulename{gameguidance} with a few extra
+  parameters.
+\item \modulename{tabuguidance.py} tries to execute actions/states/transitions
+  that haven't been executed before.
+\end{itemize}
+
+\end{document}

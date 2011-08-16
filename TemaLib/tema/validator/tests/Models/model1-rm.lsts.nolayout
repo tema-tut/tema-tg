@@ -1,0 +1,38 @@
+Begin Lsts
+
+Begin History
+End History
+
+Begin Header
+ State_cnt = 10
+ Action_cnt = 9
+ Transition_cnt = 14
+ Initial_states = 1;
+End Header
+
+Begin Action_names
+ 1 = "start_awAction1"
+ 2 = "start_awAction2"
+ 3 = "kw_Perform <Action>"
+ 4 = "~kw_Perform <Action>"
+ 5 = "~end_awAction2"
+ 6 = "kw_DoSomethingElse"
+ 7 = "end_awAction1"
+ 8 = "end_awAction2"
+ 9 = "kw_DoSomething"
+End Action_names
+
+Begin Transitions
+ 1: 2,1 3,2;
+ 2: 10,9;
+ 3: 4,3 5,4;
+ 4: 1,8;
+ 5: 6,5;
+ 6: 7,1 8,2;
+ 7: 9,6;
+ 8: 4,3 5,4;
+ 9: 6,7;
+ 10: 1,7;
+End Transitions
+
+End Lsts

@@ -1,0 +1,29 @@
+Begin Lsts
+
+Begin History
+
+ 1
+ "trivial.lsts"
+ "02.04.2007 14:30 <command line not given>"
+ "States: 1. Transitions: 0."
+
+End History
+
+Begin Header
+
+ State_cnt = 1
+ Action_cnt = 0
+ Transition_cnt = 0
+ Initial_states = 1;
+
+End Header
+
+Begin Layout
+
+ 1 0 0
+
+End Layout
+
+End Lsts
+
+ "Run time: less than 5 sec."

@@ -1,0 +1,67 @@
+# Copyright (c) 2006-2010 Tampere University of Technology
+# 
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+# 
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+###########################################
+### Generic rules for parallel composition:
+
+# Comment transition start with double dash
+
+(${.*},"--${.*}") -> "$=1.:--$=2."
+
+# Keywords are executed without synchronisation:
+# keywords may or may not start with "~", 
+# which is followed either by
+# 1) kw or vw, or
+# 2) target:kw or target:vw
+
+(${.*},"${~?}${[kv]}w${.*}") -> "$=2.$=3.w$=4."
+(${.*},"${~?}${[a-zA-Z0-9_]+}:${[kv]}w${.*}") -> "$=2.$=3.:$=4.w$=5."
+
+# Starting and ending action words are synchronized between
+# action machine X and its refiment machines X-rm*:
+
+(${.*},"${start|~?end}${.*}") (${$=1.-rm.*},"$=2.$=3.") -> "$=1.:$=2.$=3."
+
+
+# Task switcher is synchronized to every LTS that can execute SLEEPts
+# and WAKEts
+#
+# WAKEtsCANWAKE can be executed only if the action machine
+# is in a state where it can be woken up by the task switcher.
+# If it is executed, the task switcher next executes activation action
+# word (awActivate) which is refined as kwLauchApp by default. Then the
+# task switcher finally wakes up the task switcher by executing WAKEtsWAKE.
+#
+# Original action machines include only "WAKEts" transition, but the
+# transition is splitted in two: WAKEtsCANWAKE and WAKEtsWAKE before
+# generating the rules for the parallel composition.
+
+# (TaskSwitcher,"${SLEEPts|WAKEtsCANWAKE|WAKEtsWAKE}<${.*}>") (${$=2.},"${$=1.}") -> "$=1.<$=2.>"
+#(TaskSwitcherGEN,"${SLEEPts|WAKEtsCANWAKE|WAKEtsWAKE}<${.*}>") (${$=2.},"${$=1.}") -> "$=1.<$=2.>"
+(${.*},"${(SLEEP|WAKE|REQ|ALLOW).*}") -> "$=2."
+
+
+# SLEEPapp and WAKEapp are synchronised directly
+
+# (${.*},"SLEEPapp<${.*}>") (${.*},"${WAKEapp<$=2.>}") (TaskSwitcher${.*},"ACTIVATED<$=3.>"),"ACTIVATED<$=3.>") -> "$=1. ACTIVATES $=3.: $=2."
+
+

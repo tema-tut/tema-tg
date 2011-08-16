@@ -1,0 +1,24 @@
+include debian/control
+include debian/copyright
+include debian/rules
+include debian/compat
+include debian/changelog
+include GNUmakefile
+include MANIFEST.in
+include LICENCE
+include README*pdf
+include README*html
+include Docs/ssprotocol/*.tex
+include Docs/ssprotocol/*.pdf
+include Docs/ssprotocol/GNUmakefile
+include Docs/testengine-for-developers/*.tex
+include Docs/testengine-for-developers/*.pdf
+include Docs/testengine-for-developers/GNUmakefile
+include TemaLib/tema/ats4appmodel/readme.txt
+include ModelUtils/make-wwwgui-actions.sh
+include Docs/man/man1/*.1
+recursive-include TemaLib/tema/*/tests/* *
+include TemaLib/tema/modelutils/pcrules/Generic*
+include gui_interface/tema.*_engine
+include gui_interface/tema.list_sessions
+include TemaLib/tema/modelutils/makefiles/GNUmakefile*

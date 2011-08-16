@@ -1,0 +1,72 @@
+Begin Lsts
+
+Begin History
+
+ 1
+ "model1-rm.lsts"
+ "05.04.2007 14:18 <command line not given>"
+ "States: 12. Transitions: 16."
+
+End History
+
+Begin Header
+
+ State_cnt = 12
+ Action_cnt = 10
+ Transition_cnt = 16
+ Initial_states = 1;
+
+End Header
+
+Begin Action_names
+
+ 1 = "start_awAction1"
+ 2 = "end_awAction1"
+ 3 = "start_awAction2"
+ 4 = "end_awAction2"
+ 5 = "kw_DoSomething"
+ 6 = "kw_DoSomethingElse"
+ 7 = "kw_Perform <Action>"
+ 8 = "~kw_Perform <Action>"
+ 9 = "kw_return true"
+ 10 = "kw_return false"
+
+End Action_names
+
+Begin Transitions
+
+ 1: 2,1 7,3;
+ 2: 3,5;
+ 3: 1,2;
+ 4: 5,1 10,3;
+ 5: 6,6;
+ 6: 4,2;
+ 7: 11,7 12,8;
+ 8: 4,4;
+ 9: 1,4;
+ 10: 11,7 12,8;
+ 11: 9,9;
+ 12: 8,10;
+
+End Transitions
+
+Begin Layout
+
+ 1 320 -64
+ 2 384 -128
+ 3 320 -128
+ 4 320 192
+ 5 256 256
+ 6 256 192
+ 7 256 64
+ 8 256 128
+ 9 512 320
+ 10 384 256
+ 11 384 192
+ 12 64 384
+
+End Layout
+
+End Lsts
+
+ "Run time: less than 5 sec."

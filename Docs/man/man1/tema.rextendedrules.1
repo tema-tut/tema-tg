@@ -1,0 +1,36 @@
+.TH TEMA.REXTENDEDRULES 1 local
+.SH NAME
+tema.rextendedrules \- 
+.SH SYNOPSIS
+.B tema.rextendedrules [options] [inputfile] [outputfile]
+.SH DESCRIPTION
+.I Tema.rextendedrules
+takes extended rules file with regular expressions as input and gives extended
+rules as output. The output can be redirected to tvt.extendedrules program.
+.SH ARGUMENTS
+.TP
+.B inputfile
+Rules file to read. If no filename is given or filename is -, reads from 
+standard input.
+.TP
+.B outputfile
+Rules file to write. If no filename is given or filename is -, writes to  
+standard output
+.SH OPTIONS
+.B \--help
+Show help message and exit
+.TP
+.B \--re-help
+Show help on regular expressions
+.TP
+.B \--force
+Overwrite output file if it exists
+.TP
+.B \--Wall
+Print warnings if rows of input file could not be parsed. (Otherwise the rows
+are silently skipped).
+.SH EXAMPLES
+.TP
+.B tema.rextendedrules rules.rext rules.ext
+.SH SEE ALSO
+tema.renamerules(1)

@@ -1,0 +1,1112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.4.1: http://docutils.sourceforge.net/" />
+<title>TEMA Test Engine</title>
+<meta name="date" content="09.12.2010" />
+<style type="text/css">
+
+/*
+:Author: David Goodger
+:Contact: goodger@users.sourceforge.net
+:Date: $Date: 2005-12-18 01:56:14 +0100 (Sun, 18 Dec 2005) $
+:Revision: $Revision: 4224 $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin-left: 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left {
+  clear: left }
+
+img.align-right {
+  clear: right }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font-family: serif ;
+  font-size: 100% }
+
+pre.literal-block, pre.doctest-block {
+  margin-left: 2em ;
+  margin-right: 2em ;
+  background-color: #eeeeee }
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+tt.docutils {
+  background-color: #eeeeee }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="tema-test-engine">
+<h1 class="title">TEMA Test Engine</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Date:</th>
+<td>09.12.2010</td></tr>
+</tbody>
+</table>
+<p></p>
+<div class="contents topic">
+<p class="topic-title first"><a id="table-of-contents" name="table-of-contents">Table of Contents</a></p>
+<ul class="simple">
+<li><a class="reference" href="#introduction" id="id2" name="id2">Introduction</a><ul>
+<li><a class="reference" href="#included-programs" id="id3" name="id3">Included Programs</a><ul>
+<li><a class="reference" href="#model-analysation" id="id4" name="id4">Model Analysation</a></li>
+<li><a class="reference" href="#model-conversion" id="id5" name="id5">Model Conversion</a></li>
+<li><a class="reference" href="#model-configuring-composing-and-executing" id="id6" name="id6">Model Configuring,Composing and Executing</a></li>
+<li><a class="reference" href="#special-tools-for-model-composing" id="id7" name="id7">Special tools for model composing</a></li>
+<li><a class="reference" href="#log-analysation" id="id8" name="id8">Log Analysation</a></li>
+<li><a class="reference" href="#other" id="id9" name="id9">Other</a></li>
+</ul>
+</li>
+<li><a class="reference" href="#included-documentation" id="id10" name="id10">Included Documentation</a></li>
+</ul>
+</li>
+<li><a class="reference" href="#models" id="id11" name="id11">Models</a><ul>
+<li><a class="reference" href="#action-machines" id="id12" name="id12">Action Machines</a></li>
+<li><a class="reference" href="#refinement-machines" id="id13" name="id13">Refinement Machines</a></li>
+<li><a class="reference" href="#localisation" id="id14" name="id14">Localisation</a></li>
+<li><a class="reference" href="#data" id="id15" name="id15">Data</a><ul>
+<li><a class="reference" href="#defining-data" id="id16" name="id16">Defining data</a></li>
+<li><a class="reference" href="#using-data" id="id17" name="id17">Using data</a></li>
+</ul>
+</li>
+<li><a class="reference" href="#building-a-model" id="id18" name="id18">Building a model</a></li>
+<li><a class="reference" href="#validating-a-model" id="id19" name="id19">Validating a model</a></li>
+<li><a class="reference" href="#converting-models" id="id20" name="id20">Converting Models</a></li>
+</ul>
+</li>
+<li><a class="reference" href="#test-execution" id="id21" name="id21">Test execution</a><ul>
+<li><a class="reference" href="#test-engine" id="id22" name="id22">Test Engine</a><ul>
+<li><a class="reference" href="#model-obligatory" id="id23" name="id23">--model (obligatory)</a></li>
+<li><a class="reference" href="#coverage-and-coveragereq-obligatory" id="id24" name="id24">--coverage and --coveragereq (obligatory)</a></li>
+<li><a class="reference" href="#initmodels" id="id25" name="id25">--initmodels</a></li>
+<li><a class="reference" href="#guidance-and-guidance-args" id="id26" name="id26">--guidance and --guidance-args</a></li>
+<li><a class="reference" href="#adapter-and-adapter-args" id="id27" name="id27">--adapter and --adapter-args</a></li>
+<li><a class="reference" href="#logger-and-logger-args" id="id28" name="id28">--logger and --logger-args</a></li>
+<li><a class="reference" href="#testdata" id="id29" name="id29">--testdata</a></li>
+<li><a class="reference" href="#actionpp-and-actionpp-args" id="id30" name="id30">--actionpp and --actionpp-args</a></li>
+<li><a class="reference" href="#stop-after" id="id31" name="id31">--stop-after</a></li>
+<li><a class="reference" href="#verify-states" id="id32" name="id32">--verify-states</a></li>
+</ul>
+</li>
+<li><a class="reference" href="#repeating-a-test-run" id="id33" name="id33">Repeating a test run</a><ul>
+<li><a class="reference" href="#deterministic-guidance-algorithms" id="id34" name="id34">Deterministic guidance algorithms</a></li>
+<li><a class="reference" href="#coverage-requirement-based-on-executed-actions" id="id35" name="id35">Coverage requirement based on executed actions</a></li>
+<li><a class="reference" href="#test-log-is-a-model" id="id36" name="id36">Test log is a model</a></li>
+</ul>
+</li>
+<li><a class="reference" href="#id1" id="id37" name="id37">Log Analysation</a></li>
+<li><a class="reference" href="#coverage-language" id="id38" name="id38">Coverage language</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p></p>
+<div class="section">
+<h1><a class="toc-backref" href="#id2" id="introduction" name="introduction">Introduction</a></h1>
+<p>This package contains programs for model analysation, model configuring and
+composing, log analysation and test engine for running tests. In addition to
+that some documentation is provided.</p>
+<div class="section">
+<h2><a class="toc-backref" href="#id3" id="included-programs" name="included-programs">Included Programs</a></h2>
+<div class="section">
+<h3><a class="toc-backref" href="#id4" id="model-analysation" name="model-analysation">Model Analysation</a></h3>
+<ul class="simple">
+<li>tema.actionlist: List all action words in test model</li>
+<li>tema.analysator: Analyse test models</li>
+<li>tema.packagereader: Read various information from model package</li>
+<li>tema.simulate: Simulate model</li>
+<li>tema.xsimulate: Simulate model graphically</li>
+<li>tema.validate: Validate model components</li>
+</ul>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id5" id="model-conversion" name="model-conversion">Model Conversion</a></h3>
+<ul class="simple">
+<li>tema.ats4appmodel2lsts: Convert Ats4AppModel-model to LSTS-model</li>
+<li>tema.mdm2svg: Convert MDM-Model to svg</li>
+<li>tema.model2dot: Generate graphviz models from TEMA-models.</li>
+<li>tema.model2lsts: Convert any TEMA-model to LSTS-model</li>
+</ul>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id6" id="model-configuring-composing-and-executing" name="model-configuring-composing-and-executing">Model Configuring,Composing and Executing</a></h3>
+<ul class="simple">
+<li>tema.composemodel: Compose test model that can be run with tema.testengine</li>
+<li>tema.generatetestconf: Configure model so it can be composed with
+tema.composemodel</li>
+<li>tema.testengine: Execute test model</li>
+<li>tema.runmodelpackage: Helper program that uses composemodel,generatetestconf
+and testengine.</li>
+</ul>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id7" id="special-tools-for-model-composing" name="special-tools-for-model-composing">Special tools for model composing</a></h3>
+<p>These tools are used by other tools and generally are not indended for use by
+regular user.</p>
+<ul class="simple">
+<li>tema.generatetaskswitcher: Generate task switcher for models</li>
+<li>tema.gt: Tool for graph transformations in LSTSes</li>
+<li>tema.renamerules: Tool for renaming rules in rules-files</li>
+<li>tema.rextendedrules: Convert extended rules file with regular expressions to
+extended rules file</li>
+<li>tema.specialiser: Specialise model</li>
+</ul>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id8" id="log-analysation" name="log-analysation">Log Analysation</a></h3>
+<ul class="simple">
+<li>tema.log2srt: Generate subtitle file from TEMA test log</li>
+<li>tema.logreader: General information about TEMA test log</li>
+<li>tema.plotter: Convert information generated with tema.logreader to gnuplot
+format</li>
+<li>tema.sequencer: Generate action sequence from TEMA test log. Action sequence
+can be given to TEMA test engine as parameter</li>
+</ul>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id9" id="other" name="other">Other</a></h3>
+<ul class="simple">
+<li>tema.filterexpand: Filter test model</li>
+<li>tema.variablemodelcreator: Generate variable models that can be imported in
+ModelDesigner</li>
+</ul>
+</div>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id10" id="included-documentation" name="included-documentation">Included Documentation</a></h2>
+<ul class="simple">
+<li>Docs/testengine-for-developers: Short introduction for TEMA Test Engine
+internals</li>
+<li>Docs/ssprotocol: Specification of protocol used for communication between
+Test Engine and Client Adapters.</li>
+<li>INSTALL: Installation instructions</li>
+<li>README: General user guide</li>
+<li>TemaLib/tema/ats4appmodel/readme: Instructions for using Ats4AppModel-model
+to LSTS-model converter</li>
+</ul>
+<p></p>
+</div>
+</div>
+<div class="section">
+<h1><a class="toc-backref" href="#id11" id="models" name="models">Models</a></h1>
+<div class="section">
+<h2><a class="toc-backref" href="#id12" id="action-machines" name="action-machines">Action Machines</a></h2>
+<p>Action machines describe user actions on the level that is independent of user
+interface details. Each action is called action word.</p>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id13" id="refinement-machines" name="refinement-machines">Refinement Machines</a></h2>
+<p>Refinement machines convert the high level user actions (action words) to
+concrete events in the user interface using keywords.</p>
+<p>There is at least one refinement machine for every action machine for every
+device.</p>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id14" id="localisation" name="localisation">Localisation</a></h2>
+<p>TEMA includes support for localisation, that is, replacing specially
+tagged strings in action names (esp. keywords) by strings of selected
+language.</p>
+<p>Localisation data is stored in files, each of which contain a table.
+The header row specifies which languages will be given in the
+following columns. The first column contains identifiers that will be
+translated to the specified language in the localisation.</p>
+<p>The localisation tables are read in CSV format produced by Excel
+(fields are separated by semicolons ';'). Example:</p>
+<pre class="literal-block">
+identifier;en;fi;se
+Contacts;Contacts;Kontaktit;Kontakter
+Calendar;Calendar;Kalenteri;Kalender
+</pre>
+<p>To see, how localisation tables are used in the test execution, see
+Section.</p>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id15" id="data" name="data">Data</a></h2>
+<p>TEMA tools support using test data. The data can be filenames, contents for
+text messages, first and last name, phone numbers, addresses, etc.</p>
+<div class="section">
+<h3><a class="toc-backref" href="#id16" id="defining-data" name="defining-data">Defining data</a></h3>
+<p>Test data is defined in separate data files. Each line in a data file defines
+one variable, its optional structure and all possible values. The variable
+name and the structure are separated from the values with a colon.</p>
+<p>For example, &quot;txtfilename&quot; variable that can have four different values is
+defined as follows:</p>
+<pre class="literal-block">
+txtfilename: [&quot;abcxyzåäö.txt&quot;, &quot;a.txt&quot;, &quot;.txt&quot;, &quot;a&quot;]
+</pre>
+<p>It is possible to define structured data values. For example, a
+variable named &quot;contact&quot; can include fields &quot;name&quot; and &quot;number&quot;. This allows
+using the data so that a name is associated to a single phone number.</p>
+<p>In the following, &quot;contact&quot; variable contains two names and their phone
+numbers:</p>
+<pre class="literal-block">
+contact(name, number): [(&quot;Alice&quot;,&quot;5554&quot;), (&quot;Bob&quot;,&quot;55553&quot;)]
+</pre>
+<p>The depth of structures is not limited. In the next example, &quot;name&quot; field in
+contacts is divided to &quot;first&quot; and &quot;last&quot; fields, but the phone number is
+without substructure:</p>
+<pre class="literal-block">
+contact(name(first, last), number): \
+     [((&quot;Alice&quot;,&quot;Allosaurus&quot;),&quot;5554&quot;), \
+     ((&quot;Bob&quot;,&quot;Builder&quot;),&quot;5553&quot;)]
+</pre>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id17" id="using-data" name="using-data">Using data</a></h3>
+<p>Data is be manipulated and printed in the transitions of test models. If the
+label of a transition contains statements between &quot;$(&quot; and &quot;)$&quot;, the
+statements are evaluted when the transition is executed in the test model.
+This happens to all transitions, despite the type of the label (keywords,
+action words and comments). The statements are written in Python.</p>
+<p>If the evaluation results in data in OUT variable, the corresponding
+$(...)$ in the transition label is replaced by the value of OUT. Otherwise,
+the $(...)$ is replaced by an empty string.</p>
+<p>Functions &quot;first&quot;, &quot;next&quot; and &quot;any&quot; can be used to change the value of a
+variable.</p>
+<p>For example, given the data in the above example, execution of transitions</p>
+<pre class="literal-block">
+start_awEditContact
+  -- trying to find $(any(contact); OUT=contact.name.last)$
+  ~kw_VerifyText '$(OUT=contact.name.first)$'
+  kw_PressHardKey &lt;East&gt;
+  kw_VerifyText '$(OUT=contact.name.first)$'
+  kw_SelectMenu 'Edit'
+  kw_VerifyText '$(OUT=contact.number)$'
+  kw_PressHardKey &lt;SoftRight&gt;
+end_awEditContact
+</pre>
+<p>may have resulted in the following execution in the point of view of a
+test adapter</p>
+<pre class="literal-block">
+start_awEditContact
+  -- trying to find Builder
+  ~kw_VerifyText 'Bob'
+  kw_PressHardKey &lt;East&gt;
+  kw_VerifyText 'Bob'
+  kw_SelectMenu 'Edit'
+  kw_VerifyText '5553'
+  kw_PressHardKey &lt;SoftRight&gt;
+end_awEditContact
+</pre>
+</div>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id18" id="building-a-model" name="building-a-model">Building a model</a></h2>
+<p>First input file <em>testconfiguration.conf</em> needs to be created for
+<strong>tema.generatetestconf</strong>. Following example file configures model for
+two target devices with Messaging-application in Android-emulator target and
+Telephony-application in N95-target. <strong>Tema.packagereader</strong> can be used to
+determine required information from model.</p>
+<pre class="literal-block">
+[targets: type]
+Emulator: Emulator21
+Frank: N95
+
+[targets: actionmachines[]]
+Emulator: Messaging%20-%20Create%20MMS.lsts, \
+          Messaging%20-%20Create%20SMS.lsts, \
+          Messaging%20-%20Inbox.lsts, \
+          Messaging%20-%20Main.lsts, \
+          Messaging%20-%20Messages%20Interface.lsts, \
+          Messaging%20-%20Messages.lsts, \
+          Messaging%20-%20Receiver.lsts, \
+          Messaging%20-%20Sender.lsts, \
+          Messaging%20-%20Startup.lsts
+Frank: Telephony%20-%20Call%20Ender.lsts, \
+       Telephony%20-%20Call%20Receiver.lsts, \
+       Telephony%20-%20Call.lsts, \
+       Telephony%20-%20Caller.lsts, \
+       Telephony%20-%20Dialer.lsts
+
+[data: names[]]
+datatables: Frank.td, Emulator.td, Text%20Messages.td, \
+            Multimedia%20Messages.td, \
+            Message%20Constants.td, \
+            Telephony%20Constants.td
+
+localizationtables: Emulator21.csv, N95.csv
+</pre>
+<p>Next execute <strong>tema.generatetestconf</strong></p>
+<pre class="literal-block">
+$ mkdir NG_Models
+$ cd NG_Models
+$ unzip ../NG_Models.zip
+$ cd ..
+$ tema.generatetestconf NG_Models \
+                        testconfiguration.conf \
+                        runnable_model
+</pre>
+<p>To build a model, go to the model directory <em>runnable_model</em> and run command
+<strong>tema.composemodel</strong>.</p>
+<pre class="literal-block">
+$ cd runnable_model
+$ tema.composemodel
+</pre>
+<p>This results in <em>combined-rules.ext</em> file. The file contains the necessary low
+level information on the model components and their synchronisation in their
+interleaved execution (the parallel composition rules). The model behaviour is
+calculated on-the-fly during the test run based on this file.</p>
+<p>Individual target models in configured model can also be composed.:</p>
+<pre class="literal-block">
+$ cd runnable_model/Emulator
+$ tema.composemodel
+</pre>
+<p>This results in <em>rules.ext</em> file. Composing single target model can be useful
+for example for model validation purposes.</p>
+<p>Easier alternative is to use command <strong>tema.runmodelpackage</strong>. Runmodelpackage
+automates previous steps and makes it easier to use models. Following command</p>
+<pre class="literal-block">
+$ tema.runmodelpackage NG_Models.zip \
+       --devices=&quot;Frank Emulator&quot; \
+       --applications=&quot;Frank:Telephony;Emulator:Messaging&quot; \
+       --targetdir=runnable_model \
+       --norun
+</pre>
+<p>creates runnable target in directory <strong>runnable_model</strong> with devices
+<em>Frank</em> and <em>Emulator</em> but does not start testengine.</p>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id19" id="validating-a-model" name="validating-a-model">Validating a model</a></h2>
+<p>You can simulate the execution of the test model step-by-step with
+command</p>
+<pre class="literal-block">
+$ tema.simulate combined-rules.ext
+</pre>
+<p>or use an advanced simulator with a GUI with command</p>
+<pre class="literal-block">
+$ tema.xsimulate combined-rules.ext
+</pre>
+<p>Testengine and <em>guiguidance</em> can be used to graphically execute models. It is
+possible to execute them on real SUT</p>
+<pre class="literal-block">
+$ tema.testengine --model:parallellstsmodel:combined-rules.ext \
+                  --guidance=guiguidance ...
+</pre>
+<p>or on graphically simulated SUT with <em>guiadapter</em></p>
+<pre class="literal-block">
+$ tema.testengine --model:parallellstsmodel:combined-rules.ext \
+                  --guidance=guiguidance \
+                  --adapter=guiadapter ...
+</pre>
+<p>or on simulated SUT with <em>testadapter</em></p>
+<pre class="literal-block">
+$ tema.testengine --model:parallellstsmodel:combined-rules.ext \
+                  --guidance=guiguidance --adapter=testadapter \
+                  --adapter-args=model:combined-rules.ext \
+                  --testdata=nodata ...
+</pre>
+<p>Model components can be validated with command <strong>tema.validate</strong>. For example:</p>
+<pre class="literal-block">
+$ tema.validate VoiceRecorder.lsts
+</pre>
+<p>Test models can be analysed with command <strong>tema.analysator</strong>. That gives some
+estimations about size of test models. Because analysing test models takes long
+time, it is best to analyse single application at a time. Multiple test models
+can be combined together in analysator and estimation of their size is given.
+For example:</p>
+<pre class="literal-block">
+$ tema.runmodelpackage NG_Models.zip --devices=Emulator \
+                       --applications=Emulator:Messaging \
+                       --targetdir=MessagingOnly \
+                       --norun
+$ cd MessagingOnly/Emulator
+$ tema.composemodel
+$ cd ../..
+$
+$ tema.runmodelpackage NG_Models.zip --devices=Emulator \
+                       --applications=Emulator:Contacts2 \
+                       --targetdir=Contacts2Only \
+                       --norun
+$ cd Contacts2Only/Emulator
+$ tema.composemodel
+$ cd ../..
+$
+$  tema.analysator multi MessagingOnly/Emulator/rules.ext \
+                        Contacts2Only/Emulator/rules.ext
+</pre>
+<p>creates two test configurations <em>MessagingOnly</em> and <em>Contacts2Only</em> with one
+target named <em>Emulator</em>. Models are then composed and after that analysator is
+executed to estimate total size of test model that contains both <em>Contacts2</em>
+and <em>Messaging</em> application.</p>
+<p>Simulate, xsimulate and validate can be used directly with any
+<em>lsts</em> (action machine or refinement machine), <em>mdm</em> or <em>ext</em> (parallel
+composition rules) file.</p>
+<p>To list the action words and keywords appearing in the model, run command</p>
+<pre class="literal-block">
+$ tema.actionlist rules.ext
+</pre>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id20" id="converting-models" name="converting-models">Converting Models</a></h2>
+<p>There are few converters included in package that can be used to convert models
+between various formats.</p>
+<ul>
+<li><p class="first"><em>tema.mdm2svg</em> can be used to convert MDM-models to svg graphics</p>
+</li>
+<li><p class="first"><em>tema.model2dot</em> can be used to convert any TEMA-model to graphviz
+( <a class="reference" href="http://www.graphviz.org/">http://www.graphviz.org/</a> ) format. For example to convert LSTS-model to
+colored svg, following commands might be used:</p>
+<pre class="literal-block">
+$ tema.model2dot Messaging%20-%20Create%20SMS.lsts --colored | \
+                 dot -Tsvg -o Messaging%20-%20Create%20SMS.svg
+</pre>
+<p>Model2dot can also be used to convert small test models. In example test
+model with one application is converted to svg image. Different layout
+algorithm from graphviz is used, because test model has much more states and
+transitions than single model components.</p>
+<pre class="literal-block">
+$ tema.model2dot --colored --compact --no-actions \
+                 --no-stateprops rules.ext \
+                 | sfdp  -Tsvg  -o rules.svg
+</pre>
+</li>
+<li><p class="first"><em>tema.model2lsts</em> can be used to convert any TEMA-model to LSTS.</p>
+</li>
+<li><p class="first"><em>tema.ats4appmodel2lsts</em> can be used to convert ATS4AppModel-models
+( <a class="reference" href="http://ats4appmodel.sourceforge.net/">http://ats4appmodel.sourceforge.net/</a> ) to LSTS-models.</p>
+</li>
+</ul>
+<p>Some problems with different character encodings might be encountered during
+model conversion. <strong>iconv</strong> can be used to convert between different character
+encodings in Unix.</p>
+<pre class="literal-block">
+$ .. | iconv --from-code iso-8859-1 --to-code utf-8 | ..
+</pre>
+<p></p>
+</div>
+</div>
+<div class="section">
+<h1><a class="toc-backref" href="#id21" id="test-execution" name="test-execution">Test execution</a></h1>
+<div class="section">
+<h2><a class="toc-backref" href="#id22" id="test-engine" name="test-engine">Test Engine</a></h2>
+<p>You can execute the test engine with <strong>tema.testengine</strong>. For example:</p>
+<pre class="literal-block">
+$ tema.testengine \
+      --model=parallellstsmodel:rules.ext \
+      --coveragereq=&quot;actions .*fullscreen.*&quot; \
+      --initmodels=&quot;lstsmodel:boot.lsts,parallellstsmodel:initrules.ext&quot; \
+      --testdata='file:calendardata.td,file:gallerydata.td' \
+      --guidance=gameguidance \
+      --guidance-args=&quot;lookahead:15,randomseed:42&quot; \
+      --adapter=socketserveradapter \
+      --adapter-args=&quot;port:9090&quot; \
+      --actionpp=localspp \
+      --actionpp-args='file:phones.csv,lang:en' \
+      --logger=fdlogger \
+      --logger-args='targetfd:stdout,exclude:ParallelLstsModel' \
+      --stop-after=1h30m55s
+</pre>
+<p>The --model and --coveragereq arguments are obligatory, other arguments have
+some default values. Model argument specifies which test model should be used.
+Coverage requirement sets the stopping condition for the test run, that is,
+when the test has passed. In more detail, the arguments are:</p>
+<div class="section">
+<h3><a class="toc-backref" href="#id23" id="model-obligatory" name="model-obligatory">--model (obligatory)</a></h3>
+<p>The test execution tool can run tests based on</p>
+<ul class="simple">
+<li>a single LSTS file (for example, an LSTS drawn with TVT LSTS Editor)</li>
+<li>a single MDM file (ModelDesigner Model)</li>
+<li>TVT parallel composition extended rules file (<strong>rules.ext</strong> that is generated
+when tema.composemodel is run in a model directory )</li>
+<li>a test log</li>
+</ul>
+<p>if an LSTS file contains the model, use:</p>
+<pre class="literal-block">
+--model=lstsmodel:name-of-lsts-file
+</pre>
+<p>if an MDM file contains the model, use:</p>
+<pre class="literal-block">
+--model=mdmmodel:name-of-mdm-file
+</pre>
+<p>If the model is described in a parallel composition rules file, use:</p>
+<pre class="literal-block">
+--model=parallellstsmodel:name-of-rules-file
+</pre>
+<p>If you want to execute exactly the same keywords as in an earlier test run,
+use:</p>
+<pre class="literal-block">
+--model=tracelogmodel:name-of-log-file
+</pre>
+<p>When using <strong>tracelogmodel</strong>, you must have &quot;Adapter:&quot; rows in the log. Do not
+exclude adapter module from the logger if you want to be able to repeat the
+test this way.</p>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id24" id="coverage-and-coveragereq-obligatory" name="coverage-and-coveragereq-obligatory">--coverage and --coveragereq (obligatory)</a></h3>
+<pre class="literal-block">
+--coverage=clparser \
+--coveragereq=&quot;req1 and|or|then req2...&quot;
+</pre>
+<p>There are five coverage module implementations in the TEMA package:
+<em>altercoverage</em>, <em>clparser</em>, <em>findnewcoverage</em>, <em>trace_cov</em> and
+<em>dummycoverage</em>. The arguments of different modules vary. To list the valid
+arguments of the module, try <em>--coveragereq-args=help</em>.</p>
+<ul>
+<li><p class="first"><em>dummycoverage</em> gives always zero percentage for coverage. This can be used
+for test runs that should run without stopping condition.</p>
+</li>
+<li><p class="first"><em>trace_cov</em> can be used with action sequences that are generated with
+tema.sequencer from test log.</p>
+</li>
+<li><p class="first"><em>findnewcoverage</em> tries to find new things in the model.</p>
+</li>
+<li><p class="first"><em>altercoverage</em> tries to maximise switches between applications.</p>
+</li>
+<li><p class="first"><em>clparser</em> implements coverage language.</p>
+<p>If you want to cover every high level action (action word) that
+appears in the model, use:</p>
+<pre class="literal-block">
+--coveragereq=&quot;actions end_aw.*&quot;
+</pre>
+<p>If you want to test viewing an image in full screen mode and after
+that zooming in and out, use:</p>
+<pre class="literal-block">
+--coveragereq=&quot;action .*awFullScreen then (action .*awZoomIn and action
+  .*awZoomOut)&quot;
+</pre>
+<p>To find out which actions appear in the test model, run</p>
+<pre class="literal-block">
+tema.actionlist rules.ext
+</pre>
+<p>in the model directory.</p>
+<p>Coverage language is described in more detail in Section Coverage language.</p>
+</li>
+</ul>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id25" id="initmodels" name="initmodels">--initmodels</a></h3>
+<pre class="literal-block">
+--initmodels=modeltype1:modelfile1,modeltype2:modelfile2,...
+</pre>
+<p>The purpose of initialization models is to drive the SUT to a state that is
+assumed in the test model. This may require booting the SUT, creating or
+deleting some files in the SUT, and changing settings of applications in the
+SUT, for instance.</p>
+<p>Initialization models are models that end up to a deadlock, that is, a state
+which is not the source state of any transition. When a deadlock state is
+reached, the initialization with that model has been ended. Initialization
+models are executed one by one in the order they are listed. Model type can be
+any of supported model types, for example, <em>lstsmodel</em>, <em>parallellstsmodel</em>,
+<em>mdmmodel</em> or <em>tracelogmodel</em>. When all initialization models have been
+successfully executed, the main test starts. An error detected in the
+initialization prevents also starting the main test.</p>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id26" id="guidance-and-guidance-args" name="guidance-and-guidance-args">--guidance and --guidance-args</a></h3>
+<pre class="literal-block">
+--guidance=guidance-module
+--guidance-args=arg1:val1,arg2:val2,...
+</pre>
+<p>There are nine guidance module implementations in the TEMA package:
+<em>gameguidance</em>, <em>gameguidance-t</em>, <em>greedyguidance</em>, <em>randomguidance</em>,
+<em>guiguidance</em>, <em>tabuguidance</em>, <em>sharedtabuguidance</em> , <em>weightguidance</em> and
+<em>oneafteranotherguidance</em>. The arguments of different modules vary. To list
+the valid arguments of the module, try <em>--guidance-args=help</em>.</p>
+<ul class="simple">
+<li><em>randomguidance</em> chooses randomly (parameter <em>randomseed</em>)
+one of the transitions leaving the current state.</li>
+<li><em>gameguidance</em> calculates every path of the required length (parameter
+<em>lookahead</em>) beginning from the current state. It chooses randomly
+(parameter <em>randomseed</em>) one of the paths which give the greatest increase
+in the coverage with the smallest number of steps. The calculated paths are
+then used in at least next <em>rerouteafter</em> (parameter) steps.</li>
+<li><em>gameguidance-t</em> calculates in background (in another thread) paths
+beginning from the current state. The maximum length of the paths is limited
+by parameter <em>maxdepth</em>. Next transition is chosen randomly (parameter
+<em>randomseed</em>) among the paths which give the greatest increase in the
+coverage. This algorithm uses efficiently the waiting time caused by a slow
+SUT or test interface.</li>
+<li><em>greedyguidance</em> is a breadth first searching algorithm that returns the
+shortest path improving coverage.  If one of the search limits is reached, a
+random path is selected.  There are two possible limiting parameters:
+<em>max_states</em> gives the upper bound to the number of states expanded in a
+single search, and <em>max_second</em> limits the time a single search can
+last. (Greedy guidance is known as <em>wormguidance</em> in some
+context.)</li>
+<li><em>guiguidance</em> is a manual guidance. Path is manually selected through
+graphical user interface. <em>Guiadapter</em> can be used with <em>guiguidance</em> to
+fully simulate execution graphically.</li>
+<li><em>tabuguidance</em> tries to find actions/states/transitions that are not in a
+tabulist.</li>
+<li><em>sharedtabuguidance</em> is a guidance that shares a tabulist between processes</li>
+<li><em>weightguidance</em></li>
+<li><em>oneafteranotherguidance</em> is a special guidance that executes multiple
+guidances.</li>
+</ul>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id27" id="adapter-and-adapter-args" name="adapter-and-adapter-args">--adapter and --adapter-args</a></h3>
+<pre class="literal-block">
+--adapter=adapter-module
+--adapter-args=arg1:val1,arg2:val2,...
+</pre>
+<p>There are four adapter module implementations in the TEMA package:
+<em>socketserveradapter</em>, <em>multiplexingsocketserveradapter</em>, <em>testadapter</em> and
+<em>guiadapter</em>. The arguments of different modules vary. To list the valid
+arguments of the module, try <em>--adapter-args=help</em>.</p>
+<ul>
+<li><p class="first"><em>Socketserveradapter</em> forwards keywords to and receives the results of their
+execution from a TCP/IP port.</p>
+<p>The most important argument is <em>port</em>, which is used for specifying which
+TCP/IP port the adapter listens to (the default port is 9090). To listen to
+TCP/IP connections in port 3333, use arguments:</p>
+<pre class="literal-block">
+--adapter-args=port:3333
+</pre>
+<p>Details of the communication is described in Socket Server Adapter
+Communication Protocol <em>socketserveradapter.pdf</em></p>
+</li>
+<li><p class="first"><em>multiplexingsocketserveradapter</em> is a multiplexing version of
+socketserveradapter. Multiplexingsocketserveradapter allows more than one
+client adapters to connect to TCP/IP port.</p>
+<p>The most important argument is <em>clients</em>, which is used for specifying
+how many clients will be used. To connect with two clients in port 9090, use
+arguments:</p>
+<pre class="literal-block">
+--adapter-args=clients:2,port:9090
+</pre>
+</li>
+<li><p class="first"><em>Testadapter</em> can be used to simulate SUT. Most important argument for
+testadapter is <em>model</em>. Model specifies which test model we are
+testing. Second import argument is delay, which specifies how many seconds
+adapter waits between keyword executions.</p>
+</li>
+</ul>
+<pre class="literal-block">
+--adapter-args=model:rules.ext,delay:0.5
+</pre>
+<ul class="simple">
+<li><em>Guiadapter</em> can be used in conjunction with <em>guiguidance</em> to interactively
+execute model.</li>
+</ul>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id28" id="logger-and-logger-args" name="logger-and-logger-args">--logger and --logger-args</a></h3>
+<pre class="literal-block">
+--logger=logger-module
+--logger-args=arg1:val1,arg2:val2,...
+</pre>
+<p>There are two logger module implementations in the TEMA package: <em>fdlogger</em> and
+<em>nologger</em>. To see valid arguments, run <em>--logger-args=help</em>.</p>
+<ul class="simple">
+<li><em>fdlogger</em> has following valid arguments:<ul>
+<li><em>targetfile:name-of-log-file</em> writes log entries to the given file.</li>
+<li><em>targetgzipfile:name-of-log-file</em> writes log entries to the given gzip
+compressed file.</li>
+<li><em>targetfd:stdout|stderr|number-of-file-descriptor</em> writes log entries to
+the specified file descriptor.</li>
+<li><em>exclude:module</em> ignores log entries from the given module. Module names
+appear in the test log in the second column (right after the time).</li>
+</ul>
+</li>
+<li><em>nologger</em> can be used to disable all logging.</li>
+</ul>
+<p>Log entries can be written to several targets. For example, you can save the
+test log to file testlog1.txt and also display it (print it to the standard
+output) with arguments:</p>
+<pre class="literal-block">
+--logger-args=targetfd:stdout,targetfile:testlog1.txt
+</pre>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id29" id="testdata" name="testdata">--testdata</a></h3>
+<pre class="literal-block">
+--testdata='file:data1.td,file:data2.td'
+</pre>
+<p>Testengine supports testdata. Testdata are in files which can be given to
+testengine with <em>file</em> parameter. Testdata can be disabled with parameter
+<em>nodata</em>.</p>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id30" id="actionpp-and-actionpp-args" name="actionpp-and-actionpp-args">--actionpp and --actionpp-args</a></h3>
+<pre class="literal-block">
+--actionpp=action-postprocessor
+--actionpp-args=arg1:val1,arg2:val2,...
+</pre>
+<p>Keywords are sent to the test adapter through &quot;action postprocessors&quot;.</p>
+<p>Tema package contains one action postprocessor: localisation
+postprocessor <em>localspp</em>. You can give it localisation tables
+in CSV format with <em>file</em> argument and specify the default language with
+<em>lang</em> argument. For example:</p>
+<pre class="literal-block">
+--actionpp=localspp \
+--actionpp-args='file:widgets.csv,file:apps.csv,lang:fi'
+</pre>
+<p><em>Localspp</em> also supports device specific localisation. In device specific
+localisation each localisation table is bound to one device. For example:</p>
+<pre class="literal-block">
+--actionpp=localspp \
+--actionpp-args='file:Device.td:widgets.csv,lang:Device1.td:fi, \
+                 file:Device2.td:apps.csv,lang:Device2.td:en'
+</pre>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id31" id="stop-after" name="stop-after">--stop-after</a></h3>
+<pre class="literal-block">
+--stop-after=duration
+--stop-after=1h30m5s
+</pre>
+<p>Stop after arguments sets the maximum length of the test run. It can
+be given as hours, minutes, seconds, or a combination of them where
+the largest time units are given before the smaller ones. All numbers
+must be integers.</p>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id32" id="verify-states" name="verify-states">--verify-states</a></h3>
+<pre class="literal-block">
+--verify-states=1
+</pre>
+<p>All encountered state verifications can be executed with parameter value
+<em>1</em>. Default value is <em>0</em> which means no special treatment to state
+verifications.</p>
+</div>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id33" id="repeating-a-test-run" name="repeating-a-test-run">Repeating a test run</a></h2>
+<p>There are three ways to repeat a test run.</p>
+<div class="section">
+<h3><a class="toc-backref" href="#id34" id="deterministic-guidance-algorithms" name="deterministic-guidance-algorithms">Deterministic guidance algorithms</a></h3>
+<p>Test runs guided by <em>gameguidance</em> and <em>randomguidance</em>
+can be easily repeated by using the same the random seed (parameter
+<em>randomseed</em>) in the test runs, assuming that the SUT works
+deterministically.</p>
+<p>If the SUT behaves differently from the previous test run, the new
+test run may end up executing a trace that is very different from the
+previous one.</p>
+<p>Note, that repeating a test run guided by <em>gameguidance-t</em> is
+more difficult, because if the delays and the processor load are not
+exactly the same, the search depth may vary. This implies variation in
+the chosen transitions too.</p>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id35" id="coverage-requirement-based-on-executed-actions" name="coverage-requirement-based-on-executed-actions">Coverage requirement based on executed actions</a></h3>
+<p>Form a new coverage requirement by connecting the chosen actions in
+the test log with &quot;then&quot; operator. Use <em>gameguidance</em> as a
+guidance algorithm.</p>
+<p>This is the most robust way to try to execute the same (or not too
+different) trace as in the previous test run. Even if SUT behaves
+differently, the test guidance tries to guide the run to very similar
+trace as quickly as possible.</p>
+<p>Sequence of executed action words ( and keywords ) can be created with
+<em>tema.sequencer</em>:</p>
+<pre class="literal-block">
+$ tema.sequencer --aw-only &lt; testlog.log &gt; testlog.sequence
+$ tema.testengine --coverage=trace_cov --coveragereq= \
+                  --coveragereq-args=file:testlog.sequence ...
+</pre>
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id36" id="test-log-is-a-model" name="test-log-is-a-model">Test log is a model</a></h3>
+<p>With <em>tracelogmodel</em> you can execute exactly the same keywords as in the
+previous test run. The test log of the previous run is used as a model in the
+new run.</p>
+<p>If the SUT behaves differently, the test run stops immediately.</p>
+<pre class="literal-block">
+$ tema.testengine --model=tracelogmodel:testlog.log
+</pre>
+</div>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id37" id="id1" name="id1">Log Analysation</a></h2>
+<p>After test, <em>tema.log2srt</em>, <em>tema.logreader</em>, <em>tema.plotter</em> and
+<em>tema.sequencer</em> can be used to analyse test logs.</p>
+<ul>
+<li><p class="first">tema.log2srt generates subtitle file from TEMA test log. First parameter
+<em>delay</em> tells delay between test video and test log. Second parameter
+<em>clock skew</em> tells clock skew between computer that recorded video and
+computer that executed TEMA testengine. Clock skew can be removed by using
+Network Time Protocol (NTP) on both computers.</p>
+</li>
+<li><p class="first">tema.logreader prints general information about TEMA test log. It is also
+possible extract information in either <strong>gnuplot</strong> or csv-format.</p>
+</li>
+<li><p class="first">tema.plotter selects information to display with gnuplot from
+<em>tema.logreader --gnuplot</em> output format. For example</p>
+<pre class="literal-block">
+$ tema logreader testlog.log --gnuplot --datarate=10.0s | \
+  tema plotter -x s -y kw --term='svg' | gnuplot &gt; keywordsPerSec.svg
+</pre>
+<p>creates svg-picture with information about keyword execution compared with
+time.</p>
+</li>
+<li><p class="first">tema.sequencer generates action sequences from TEMA test log. Action sequence
+can be given to TEMA test engine as parameter</p>
+</li>
+</ul>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id38" id="coverage-language" name="coverage-language">Coverage language</a></h2>
+<p>Syntax of the language is the following:</p>
+<pre class="literal-block">
+cov-req  ::= elem-req | cov-req (&quot;and&quot; | &quot;or&quot; | &quot;then&quot;) cov-req
+elem-req ::= (&quot;action&quot; | &quot;actions&quot;) regexp
+</pre>
+<p>where <em>regexp</em> is an regular expression matching names of actions in the test
+model. Parenthesis can be used around coverage requirements.</p>
+<p>In elementary requirements (<em>elem-req</em>) with <em>action</em> you express that you
+want to cover at least one of the actions matching the regular expression.
+With <em>actions</em> you require that every action matching the regular expression
+should be covered.</p>
+</div>
+</div>
+</div>
+</body>
+</html>

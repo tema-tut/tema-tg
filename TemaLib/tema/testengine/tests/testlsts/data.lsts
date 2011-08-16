@@ -1,0 +1,44 @@
+Begin Lsts
+
+Begin History
+
+ 1
+ "data.lsts"
+ "16.04.2007 16:40 <command line not given>"
+ "States: 2. Transitions: 2."
+
+End History
+
+Begin Header
+
+ State_cnt = 2
+ Action_cnt = 2
+ Transition_cnt = 2
+ Initial_states = 1;
+
+End Header
+
+Begin Action_names
+
+ 1 = "kwincrease$(next(a))$"
+ 2 = "value $(OUT=a)$ $(OUT=any(b.c))$"
+
+End Action_names
+
+Begin Transitions
+
+ 1: 2,1;
+ 2: 1,2;
+
+End Transitions
+
+Begin Layout
+
+ 1 0 0
+ 2 108 0
+
+End Layout
+
+End Lsts
+
+ "Run time: less than 5 sec."

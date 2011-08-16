@@ -1,0 +1,45 @@
+.TH TEMA.ANALYSATOR 1 local
+.SH NAME
+tema.analysator \- Analyses test models
+.SH SYNOPSIS
+.B tema.analysator
+.B structure
+.B [filenames]
+.RB [ "options" ]
+.SH DESCRIPTION
+.I Tema.analysator
+analyses test models, gives numerical information about their reachable 
+portion and an estimate about the same information for their composition. 
+All estimates are upper bounds. Tema.analysator tries to detect model format 
+automatically from file extension. Exception is the extension .analysis, which
+will be parsed as analysator printout.
+.SH ARGUMENTS
+.TP
+.B structure=single|multi
+.B single
+assumes independent TEMA test models combined on a single target. May give 
+incorrect results for multiple targets.
+.B multi
+assumes independent TEMA test models combined on any number of targets. Gives 
+correct but possibly inaccurate results if an individual target has multiple 
+models.
+.TP
+.B filenames
+Filenames of modelcomponents. If no filename is given or filename is -, reads 
+from standard input.
+.SH OPTIONS
+.B \-h, \--help
+Show help message and exit
+.TP
+.B \-f FORMAT, \--format=FORMAT
+Format of the model file. Examples of model formats are lstsmodel, mdmmodel 
+and parallellstsmodel. Overrides automatic model format detection.
+.SH EXAMPLES
+.TP
+.B tema.analysator multi rules1.parallellsts rules2.lsts
+Tema.analysator analysis models rules1.parallellsts and rules2.lsts. Model 
+types are automatically detected from file extension.
+.TP
+.B tema.analysator single -f parallellstsmodel < rules.ext
+Tema.analysator reads model from  standard input. Model type parallellstsmodel
+is given manually.

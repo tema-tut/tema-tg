@@ -1,0 +1,40 @@
+.TH TEMA.XSIMULATE 1 local
+.SH NAME
+tema.xsimulate \- Simulate model graphically
+.SH SYNOPSIS
+.B tema.xsimulate
+[ filename ]
+.RB [ "options" ]
+.SH DESCRIPTION
+.I Tema.xsimulate 
+is used to simulate models without executing them.
+.I Tema.xsimulate
+uses graphical user interface instead of command line interface like
+.I tema.simulate
+uses. Tema.xsimulate tries to detect model format automatically from file 
+extension.
+.SH ARGUMENTS
+.TP
+.B filename
+Name of the model file. If no filename is given or filename is -, reads from 
+standard input.
+.SH OPTIONS
+.B \-h, \--help
+Show help message and exit
+.TP
+.B \-f FORMAT, \--format=FORMAT
+Format of the model file. Examples of model formats are lstsmodel, 
+mdmmodel, tracelogmodel and parallellstsmodel. Overrides automatic model 
+format detection.
+.SH EXAMPLES
+.TP
+.B tema.xsimulate example.lsts
+tema.xsimulate reads model from file
+.B example.lsts.
+Model format is detected automatically from file extension.
+.TP
+.B tema.xsimulate -f parallellstsmodel - < rules.ext
+tema.xsimulate reads model from standard input and uses model type 
+parallellstsmodel. Reading from standard input requires format option -f
+.SH SEE ALSO
+tema.simulate(1)

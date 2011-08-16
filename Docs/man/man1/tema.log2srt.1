@@ -1,0 +1,23 @@
+.TH TEMA.LOG2SRT 1 local
+.SH NAME
+tema.log2srt \- Generate subtitle file from log file
+.SH SYNOPSIS
+.B tema.log2srt [delay [skew]]
+.SH DESCRIPTION
+.I Tema.log2srt
+is used to generate subtitle files from TEMA test logs. Subtitle files can be
+used for debugging purposes.
+.SH ARGUMENTS
+.TP
+.B delay
+Subtitle delay in seconds. Default 0.0
+.TP
+.B skew
+Clock skew between server and videorecorder (default 1.0)
+.SH EXAMPLES
+.TP
+tema.log2srt < test.log > test.srt
+.SH SEE ALSO
+.IR tema.logreader (1),
+.IR tema.sequencer (1),
+.IR tema.testengine (1)

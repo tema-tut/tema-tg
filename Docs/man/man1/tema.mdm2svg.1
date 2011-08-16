@@ -1,0 +1,40 @@
+.TH TEMA.MDM2SVG 1 local
+.SH NAME
+tema.mdm2svg \- Create svg image out of mdm model file
+.SH SYNOPSIS
+.B tema.mdm2svg
+[ filename ]
+.RB [ "options" ]
+.SH DESCRIPTION
+.I Tema.mdm2svg
+converts model files to svg image format. 
+.SH ARGUMENTS
+.TP
+.B filename
+Name of the mdm model. If no filename is given or filename is -, reads from 
+standard input.
+.SH OPTIONS
+.B \-h, \--help
+Show help message and exit
+.TP
+.B --font-size=FONTSIZE
+Set font size to FONTSIZE
+.TP
+.B --label-offset=LABEL_OFFSET
+Set label offset to LABEL_OFFSET
+.TP
+.B \-o FILENAME, \--output=FILENAME
+Specifies the output file. If no file is specified or filename is '-', model 
+will be printed into standard output.
+.SH EXAMPLES
+.TP
+.B tema.mdm2svg testmodelcomponent.mdm
+Generate svg with default values. Prints resulting svg file to standard output.
+.TP
+.B tema.mdm2svg --font-size 12 --label-offset 2 testmodelcomponent.mdm -o testmodelcomponent.svg
+Generate svg with font-size 12 and label-offset 2. Result is written to file 
+testmodelcomponent.svg
+.TP
+.B tema.mdm2svg < testmodelcomponent.mdm
+Generate svg with default values. Model is read from standard input and written
+to standard output

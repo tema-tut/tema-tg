@@ -1,0 +1,24 @@
+.TH TEMA.SPECIALISER 1 local
+.SH NAME
+tema.specialiser \- Specialiser model
+.SH SYNOPSIS
+.B tema.specialiser
+[ info_file ] [ output_file ]
+.SH DESCRIPTION
+.I Tema.specialiser
+opens info_file and reads its APPLICATION and ABSTRACTSOURCE values.
+Then it replaces "@APPLICATION" strings in the action names of the
+ABSTRACTSOURCE lsts-file and writes resulting lsts to output_file
+.SH ARGUMENTS
+.TP
+.B info_file
+Info file to read. If no filename is given or filename is -, reads from 
+standard input.
+.TP
+.B output_file
+Filename where lsts will be written. If no filename is given or filename is -,
+writes to standard output.
+.SH EXAMPLES
+.TP
+.B tema.specialiser example.info example.lsts
+Reads values from file example.info and writes specialised lsts to example.lsts

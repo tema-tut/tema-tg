@@ -1,0 +1,52 @@
+# Copyright (c) 2006-2010 Tampere University of Technology
+# 
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+# 
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+SIMULATE:=$(shell which tema >/dev/null && echo 'tema simulate' || ( which tema.simulate >/dev/null && echo tema.simulate ) || echo 'python $(TEMA_MODEL_TOOLS)/../Validation/simulation/simulate.py' )
+XSIMULATE:=$(shell which tema >/dev/null && echo 'tema xsimulate' || ( which tema.xsimulate >/dev/null && echo tema.xsimulate ) || echo 'python $(TEMA_MODEL_TOOLS)/../Validation/simulation/xsimulate.py' )
+VALIDATE:=$(shell which tema >/dev/null && echo 'tema validate' || ( which tema.validate >/dev/null && echo tema.validate ) || echo 'python $(TEMA_MODEL_TOOLS)/../Validation/analysis/validate.py')
+ACTION_LIST:=$(shell which tema >/dev/null && echo 'tema actionlist' || ( which tema.actionlist >/dev/null && echo tema.actionlist ) || echo 'python $(TEMA_MODEL_TOOLS)/actionlist.py')
+
+wholemodel.lsts: $(RESULT)
+	tvt.extendedrules-nobuck $< - | tvt.parallel - > $@
+
+.PHONY: simulate
+simulate: $(RESULT)
+	$(SIMULATE) -f parallellstsmodel $<
+
+.PHONY: xsimulate
+xsimulate: $(RESULT)
+	$(XSIMULATE) -f parallellstsmodel $<
+
+.PHONY: validate
+validate: $(RESULT)
+	$(VALIDATE) $(shell (ls wholemodel.lsts || echo $(RESULT)) 2>/dev/null)
+
+.PHONY: validate_components
+validate_components: $(addsuffix .lsts,$(ACTIONMACHINELIST)) $(REFINEMENTMACHINESWLAYOUT)
+	$(VALIDATE) $(addsuffix .lsts,$(ACTIONMACHINELIST)) $(REFINEMENTMACHINESWLAYOUT)
+
+.PHONY: actionlist
+actionlist: $(RESULT)
+	@$(ACTION_LIST) $(RESULT) --verbose --keywords
+
+.PHONY: wwwgui_actions
+wwwgui_actions: $(RESULT)
+	@$(TEMA_MODEL_TOOLS)/make-wwwgui-actions.sh

@@ -1,0 +1,113 @@
+1="TaskSwitcherGEN-awgt.lsts"
+2="model1-awgt.lsts"
+3="model2-awgt.lsts"
+4="./model1-rm.lsts.nolayout"
+5="./model2-rm.lsts.nolayout"
+6="./TaskSwitcherGEN-rm.lsts.nolayout"
+# Copyright (c) 2006-2010 Tampere University of Technology
+# 
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+# 
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+
+###########################################
+### Generic rules for parallel composition:
+
+
+# Comment transition start with double dash
+
+
+
+
+# Keywords are executed without synchronisation:
+# keywords may or may not start with "~", 
+# which is followed either by
+# 1) kw or vw, or
+# 2) target:kw or target:vw
+
+
+(6,"kw_LaunchApp 'model2'") -> "kw_LaunchApp 'model2'"
+(6,"kw_LaunchApp 'model1'") -> "kw_LaunchApp 'model1'"
+(6,"kw_LaunchApp 'TaskSwitcherGEN'") -> "kw_LaunchApp 'TaskSwitcherGEN'"
+(5,"kw_DoSomethingElse §)$$(§") -> "kw_DoSomethingElse §)$$(§"
+(5,"kw_DoSomething $(x='§'; y='$('; z=')' + '$'; a.b(c))$") -> "kw_DoSomething $(x='§'; y='$('; z=')' + '$'; a.b(c))$"
+(4,"kw_DoSomething") -> "kw_DoSomething"
+(4,"kw_DoSomethingElse") -> "kw_DoSomethingElse"
+(4,"~kw_Perform <Action>") -> "~kw_Perform <Action>"
+(4,"kw_Perform <Action>") -> "kw_Perform <Action>"
+
+
+# Starting and ending action words are synchronized between
+# action machine X and its refiment machines X-rm*:
+
+
+(2,"~end_awAction2") (4,"~end_awAction2") -> "model1:~end_awAction2"
+(2,"end_awAction2") (4,"end_awAction2") -> "model1:end_awAction2"
+(2,"start_awAction2") (4,"start_awAction2") -> "model1:start_awAction2"
+(2,"end_awAction1") (4,"end_awAction1") -> "model1:end_awAction1"
+(2,"start_awAction1") (4,"start_awAction1") -> "model1:start_awAction1"
+(3,"end_awAction") (5,"end_awAction") -> "model2:end_awAction"
+(3,"start_awAction") (5,"start_awAction") -> "model2:start_awAction"
+(1,"end_awActivate<model1>") (6,"end_awActivate<model1>") -> "TaskSwitcherGEN:end_awActivate<model1>"
+(1,"start_awActivate<model1>") (6,"start_awActivate<model1>") -> "TaskSwitcherGEN:start_awActivate<model1>"
+(1,"end_awActivate<model2>") (6,"end_awActivate<model2>") -> "TaskSwitcherGEN:end_awActivate<model2>"
+(1,"start_awActivate<model2>") (6,"start_awActivate<model2>") -> "TaskSwitcherGEN:start_awActivate<model2>"
+
+
+
+
+# Task switcher is synchronized to every LTS that can execute SLEEPts
+# and WAKEts
+#
+# WAKEtsCANWAKE can be executed only if the action machine
+# is in a state where it can be woken up by the task switcher.
+# If it is executed, the task switcher next executes activation action
+# word (awActivate) which is refined as kwLauchApp by default. Then the
+# task switcher finally wakes up the task switcher by executing WAKEtsWAKE.
+#
+# Original action machines include only "WAKEts" transition, but the
+# transition is splitted in two: WAKEtsCANWAKE and WAKEtsWAKE before
+# generating the rules for the parallel composition.
+
+
+# (TaskSwitcher,"${SLEEPts|WAKEtsCANWAKE|WAKEtsWAKE}<${.*}>") (${$=2.},"${$=1.}") -> "$=1.<$=2.>"
+#(TaskSwitcherGEN,"${SLEEPts|WAKEtsCANWAKE|WAKEtsWAKE}<${.*}>") (${$=2.},"${$=1.}") -> "$=1.<$=2.>"
+(1,"WAKEtsWAKE<model1>") (2,"WAKEtsWAKE") -> "WAKEtsWAKE<model1>"
+(1,"SLEEPts<model1>") (2,"SLEEPts") -> "SLEEPts<model1>"
+(1,"SLEEPts<model2>") (3,"SLEEPts") -> "SLEEPts<model2>"
+(1,"WAKEtsWAKE<model2>") (3,"WAKEtsWAKE") -> "WAKEtsWAKE<model2>"
+(1,"WAKEtsCANWAKE<model2>") (3,"WAKEtsCANWAKE") -> "WAKEtsCANWAKE<model2>"
+(1,"WAKEtsCANWAKE<model1>") (2,"WAKEtsCANWAKE") -> "WAKEtsCANWAKE<model1>"
+
+
+
+
+# SLEEPapp and WAKEapp are synchronised directly
+
+
+(2,"SLEEPapp<ToModel2>") (3,"WAKEapp<ToModel2>") (1,"ACTIVATED<model2>") -> "model1 ACTIVATES model2: ToModel2"
+
+
+
+
+(3,"REQ<ToStart>") (2,"ALLOW<ToStart>") -> "model1 ALLOWS model2: ToStart"
+(3,"REQALL<ToStart>") (2,"ALLOW<ToStart>") -> "model2 WAS ALLOWED: ToStart"
+#(${.*},"REQALL<${.*}>") ALL(${.*},"ALLOW<$=2.>") -> "$=1. WAS ALLOWED: $=2."

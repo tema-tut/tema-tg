@@ -1,0 +1,38 @@
+.TH TEMA.VALIDATE 1 local
+.SH NAME
+tema.validate \- Validate model components
+.SH SYNOPSIS
+.B tema.validate
+.B [filenames]
+.RB [ "options" ]
+.SH DESCRIPTION
+.I Tema.validate
+is used to validate model components. Tema.validate tries to detect model 
+format and type automatically from file extension.
+.SH ARGUMENTS
+.TP
+.B filenames
+Filenames of modelcomponents. If no filename is given or filename is -, reads 
+from standard input.
+.SH OPTIONS
+.B \-h, \--help
+Show help message and exit
+.TP
+.B \-f FORMAT, \--format=FORMAT
+Format of the model file. Examples of model formats are lstsmodel, 
+mdmmodel, tracelogmodel and parallellstsmodel. Overrides automatic model 
+format detection.
+.TP
+.B \-t TYPE, \--type=TYPE
+Type of the model. Valid values are refined_machine, initialization_machine,
+launch_machine, action_machine, composed_machine and refinement_machine.
+Overrides automatic model type detection.
+.SH EXAMPLES
+.TP
+.B tema.validate example.lsts example-rm.lsts
+Validate action machine example.lsts and refinement machine example-rm.lsts
+.TP
+.B tema.validate -f lstsmodel -t refinement_machine < example-rm.lsts
+Validate refinement machine example-rm.lsts by reading its contents from stdin
+.SH SEE ALSO
+.IR tema.analysator (1)

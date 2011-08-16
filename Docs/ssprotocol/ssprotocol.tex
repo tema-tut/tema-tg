@@ -1,0 +1,182 @@
+\documentclass[a4paper,english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{babel}
+\usepackage{graphics}
+
+\title{\LARGE Socket Server Adapter Communication Protocol\\\vspace{.25cm}\large TEMA Unix package}
+
+\author{Antti Kervinen}
+
+\newcounter{hTeht}
+\newcounter{cfree}
+\newcounter{cypos}
+
+%%% makrot sanomakaaviota varten
+% tor (To Right) ja tol (To Left)
+\newcommand{\tor}[1]{ % kehys apu->pää {kehyksen teksti} {y-akseli}
+  \put(0,\arabic{cypos}){\vector(4,0){140}}
+  \setcounter{cfree}{\arabic{cypos}}
+  \addtocounter{cfree}{2}
+  \put(70,\arabic{cfree}){\rotatebox{0}{\makebox(0,0)[bc]{\scriptsize #1}}}
+  \addtocounter{cypos}{-20} % jokainen askel tuo y:tä 30 pt alaspäin
+}
+
+\newcommand{\tol}[1]{ % kehys pää->apu {kehyksen teksti} {y-akseli}
+  \put(140,\arabic{cypos}){\vector(-4,0){140}}
+  \setcounter{cfree}{\arabic{cypos}}
+  \addtocounter{cfree}{2}
+  \put(70,\arabic{cfree}){\rotatebox{0}{\makebox(0,0)[bc]{\scriptsize #1}}}
+  \addtocounter{cypos}{-20}
+}
+
+\newcommand{\comml}[1]{ % comment on the left hand side
+  \setcounter{cfree}{\arabic{cypos}}
+  \addtocounter{cfree}{20}
+  \put(-115,\arabic{cfree}){\tbox{r}{#1}}
+}
+
+\newcommand{\commr}[1]{ % comment on the right hand side
+  \setcounter{cfree}{\arabic{cypos}}
+  \addtocounter{cfree}{20}
+  \put(145,\arabic{cfree}){\tbox{l}{#1}}
+}
+
+\newcommand{\tbox}[2]{
+  \parbox[t#1]{100 pt}{
+    \scriptsize
+    #2
+  }
+}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+This document specifies the communication protocol implemented in TEMA
+test engine's socket server adapter.
+
+When the TEMA test engine wants to execute a keyword, it calls
+\begin{quote}
+  \texttt{sendInput(\textit{keyword string})}
+\end{quote}
+method of the adapter
+chosen for the test run. The main task of the socket server adapter is
+to forward these calls to remote clients over TCP/IP.
+
+Inititally, the socket server adapter listens to a port for TCP/IP
+connections. A client (the real adapter) connects to the port, says
+``HELO'' and waits for acknowledgement. When received, the client goes
+to a loop where it first requests a keyword, then executes it, and
+finally reports the result to the adapter.
+
+The client and the server talk by turns. That is, after sending a
+message one must receive a message. Initially, client sends and the
+server receives.
+
+The protocol is designed to be used easily over a telnet connection.
+Messages are in plain text, one message per line.
+
+\section{Messages}
+
+Message are plain text and are separated with linefeeds. Carriage
+returns are also allowed: all whitespace should be stripped from the
+end of the messages. Some messages may have parameters, which are
+separated from the messages with one space character. The following
+messages can be sent.
+
+\begin{tabular}{lp{9.5cm}}
+  & From client to server\\ \hline
+  \texttt{HELO} & The first message from a client to a server after establishing a connection.\\
+  \texttt{GET} & Keyword request\\
+  \texttt{PUT} & Parameter required, either \texttt{TRUE} or \texttt{FALSE}. Returns the status of a keyword execution to the server.\\
+  \texttt{BYE} & Client stops the test run. It should wait for \texttt{ACK}.\\
+  \texttt{ERR} & Client reports unrecoverable error in the adapter layer.\\
+  \texttt{ACK} & Positive acknowledgement: the last message (\texttt{BYE}) was understood.\\
+  \texttt{LOG} & Parameter required: free text without line breaks. The parameter is printed to the test log on the server side. This message can be sent whenever it is client's turn to talk.
+\end{tabular}
+
+\begin{tabular}{lp{9.5cm}}
+  & From server to client\\ \hline
+  \texttt{ACK} & Positive acknowledgement from the server: the last message from the client was understood. \texttt{ACK} is followed by a parameter (a keyword) if the last message was \texttt{GET}.\\
+  \texttt{NACK} & Negative response from the server: the last message was not understood.\\
+  \texttt{BYE} & Server stops the test run. Client should send \texttt{ACK} before disconnecting.\\
+  \texttt{ERR} & Server has detected an error (it found a difference between the expected and the observed behaviours). Client should repeat the last request.\\
+\end{tabular}
+
+\section{Client implementation}
+
+A very simple client can be implemented as follows:
+
+\begin{verbatim}
+send HELO
+receive ACK, otherwise quit with an error message
+
+while true
+    send GET
+    receive a message
+    if received BYE: send ACK and quit (test run ended)
+    if received ERR: save information for debugging
+    if received ACK:
+        execute the keyword given as ACK parameter.
+        repeat
+            send PUT TRUE or PUT FALSE (status of the execution)
+            receive a message
+            if received BYE: send ACK and quit
+            if received ERR: save information for debugging
+        until received ACK
+\end{verbatim}
+
+Clients can use the test log on the server side. Whenever it is
+client's turn to talk, it is allowed to send \texttt{LOG message}. The
+socket server adapter immediately writes \texttt{message} to the
+server log and sends \texttt{ACK}.
+
+To interrupt a test run, a client sends \texttt{BYE}. To be sure
+that the server understood, the client should wait for \texttt{ACK}.
+
+\section{Communication example}
+
+\begin{center}
+  \begin{picture}(300,330)(-80,0)
+    % viivat ympärille
+    \put(0,310){\line(0,-1){340}}
+    \put(140,310){\line(0,-1){340}}
+    \put(0,325){\makebox(0,0)[c]{Client}}
+    \put(140,325){\makebox(0,0)[c]{Socket server adapter}}
+    
+    % keskustelu
+    \setcounter{cypos}{300}
+    \tor{HELO} \comml{Client greets the server}
+    \tol{ACK} \commr{Server sends ack}
+    \tor{GET} \comml{Client requests the first keyword}
+    \tol{ACK kw\_LaunchApp 'Anti-Virus'} \commr{Server sends ACK with
+      a keyword}
+    \tor{PUT TRUE} \comml{Client reports that keyword was successfully 
+      executed}
+
+    \tol{ACK} \commr{Server understood the message}
+    \tor{GET} \comml{Client requests the second keyword}
+    \tol{ACK kw\_VerifyText 'Anti-Virus'}
+    \tor{PUT FALSE}
+    \tol{ACK}
+    \tor{GET} \comml{Client requests the third keyword}
+    \tol{ERR}
+    \commr{Server has detected an error: the last execution status should
+      have been TRUE.}
+    \tor{LOG debug data saved to file X}
+    \comml{Client saves some data for debugging.
+      The location of the data is stored to the server log}
+    \tol{ACK}
+    \tor{GET} \comml{Client re-requests the third keyword}
+    \tol{BYE} \commr{Server decided not to continue the test run}
+    \tor{ACK} \comml{Client acknowledges}
+    
+  \end{picture}
+\end{center}
+
+
+\end{document}

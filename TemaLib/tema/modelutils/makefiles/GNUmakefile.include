@@ -1,0 +1,161 @@
+# Copyright (c) 2006-2010 Tampere University of Technology
+# 
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+# 
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+# action machine lstss:
+ACTIONMACHINES=$(TASKSWITCHERGEN) $(ACTIONMACHINELIST)
+AM_LSTS=$(addsuffix .lsts,$(ACTIONMACHINES))
+AM_SPLIT=$(addsuffix .lsts,$(addsuffix -awgt,$(ACTIONMACHINES)))
+
+# read refinement machines from the device subdirectory
+
+ALLRM_LSTS=$(wildcard $(DEVICE)/*-rm*.lsts)
+
+# use only those refinement machines whose action machines are given
+
+REFINEMENTMACHINESWLAYOUT=$(filter $(addprefix $(DEVICE)/,$(addsuffix -%,$(subst %,\%,$(ACTIONMACHINES)))), \
+	         $(ALLRM_LSTS))
+
+REFINEMENTMACHINES=$(addsuffix .nolayout,$(REFINEMENTMACHINESWLAYOUT))
+
+ifdef TASKSWITCHERGEN
+REFINEMENTMACHINES += $(DEVICE)/$(TASKSWITCHERGENRM).lsts.nolayout
+endif
+
+PC_RULES_PATH:=$(shell python -c "import tema.modelutils;print tema.modelutils.PC_RULES_PATH;")
+TEMA_ENGINE_HOME:=$(shell python -c "import os;import tema;print os.path.dirname(tema.__file__);")
+
+# this function returns action machine of the given refinement machine
+
+rm2am=$(subst $(DEVICE)/,"",$(shell echo $(1) | sed 's/-rm.*//g'))
+
+### THE RULES
+
+$(RESULT): rules.rext $(AM_LSTS) $(AM_SPLIT) $(REFINEMENTMACHINES)
+	@test "$(TEMA_MODEL_TOOLS)" -a "$(TEMA_ENGINE_HOME)" || { \
+	echo -------------------------------------------------; \
+	echo Set environment variables: ; \
+	echo TEMA_MODEL_TOOLS, ; \
+	echo TEMA_ENGINE_HOME if you wish to run make simulate ; \
+	echo -------------------------------------------------; }
+
+	python $(TEMA_ENGINE_HOME)/modelutils/rextendedrules.py rules.rext > rules.ext-therest
+	#cat rules.ext-therest rules.ext-lstsonly > $@
+	cat rules.ext-therest > $@
+
+$(TASKSWITCHERGEN).lsts: $(filter-out $(TASKSWITCHERGEN).lsts,$(AM_LSTS))
+	python $(TEMA_ENGINE_HOME)/modelutils/generatetaskswitcher.py --am$(TGTMAGIC) $(filter-out $(TASKSWITCHERGEN),$(ACTIONMACHINES)) > $@
+
+$(DEVICE)/$(TASKSWITCHERGENRM).lsts.nolayout: $(filter-out $(TASKSWITCHERGEN).lsts,$(AM_LSTS))
+	python $(TEMA_ENGINE_HOME)/modelutils/generatetaskswitcher.py --rm $(ACTIONMACHINES) > $@
+
+rules.rext: $(PC_RULES_PATH)/GenericPCRules $(AM_SPLIT) $(REFINEMENTMACHINES)
+	$(RM) $@
+
+	$(foreach am,$(ACTIONMACHINES),\
+	  	$(shell echo $(am) | \
+	    	gawk '{am=$$1; print am" = \""am".lsts\"" >> "rules.rext-lstsonly"}'))
+
+	#cat $(PC_RULES_PATH)/GenericPCRulesForAM >> rules.rext-lstsonly
+
+	#python $(TEMA_ENGINE_HOME)/modelutils/rextendedrules.py rules.rext-lstsonly | grep '(' > rules.ext-lstsonly
+
+	$(foreach am,$(ACTIONMACHINES),\
+	  	$(shell echo $(am) | \
+	    	gawk '{am=$$1; print am" = \""am"-awgt.lsts\"" >> "rules.rext.tmp"}'))
+
+	$(foreach rm,$(REFINEMENTMACHINES),\
+		$(shell echo $(rm) | \
+		        gawk '{rm=$$1; key=rm; sub("\\.lsts","",key); sub("$(DEVICE)/","",key); \
+		               print key" = \""rm"\"" >> "rules.rext.tmp"}'))
+
+	cat rules.rext.tmp $(PC_RULES_PATH)/GenericPCRules > rules.rext
+	$(RM) rules.rext.tmp rules.rext-lstsonly
+
+%Specific.lsts: %Specific.info
+	python $(TEMA_ENGINE_HOME)/modelutils/specialiser.py $< $@
+
+%SpecificTarget.lsts: %SpecificTarget.info
+	python $(TEMA_ENGINE_HOME)/modelutils/specialiser.py $< $@
+
+%-awgt.lsts: %.lsts
+	python $(TEMA_ENGINE_HOME)/modelutils/gt.py --keep-labels $< $@ \
+		'P(s0,"sv$${.*}") -> P(s0,"sv$$=1.") T(s0,"start_sv$$=1.",s1) T(s1,"end_sv$$=1.",s0)' \
+		'T(s0,"aw$${.*}",s1)T(s0,"~aw$$=1.",s2) -> T(s0,"start_aw$$=1.",s_new)T(s_new,"end_aw$$=1.",s1)T(s_new,"~end_aw$$=1.",s2)' \
+		'T(s0,"aw$${.*}",s1)->T(s0,"start_aw$$=1.",s_new)T(s_new,"end_aw$$=1.",s1)' \
+		'T(s0,"WAKEts",s1) -> T(s0,"WAKEtsCANWAKE",s_new) T(s_new,"WAKEtsWAKE",s1)' \
+		'P(s0,"SleepState") P(s1,"ta$${.*}") -> P(s0,"SleepState") P(s1,"ta$$=1.") T(s0,"ALLOW<$$=1.>",s1)'
+
+%.lsts.iso: %.lsts
+	iconv -f UTF-8 -t ISO-8859-1 $< > $@ || cat $< > $@
+
+%.lsts.nolayout: %.lsts.iso
+	python $(TEMA_ENGINE_HOME)/modelutils/gt.py --keep-labels $< $@ \
+		'T(s0,"kw_return true",s1)T(s1,"end_aw$${.*}",s2)->T(s0,"end_aw$$=1.",s2)' \
+		'T(s0,"kw_return false",s1)T(s1,"end_aw$${.*}",s2)->T(s0,"~end_aw$$=1.",s2)'
+
+%.refined.lsts: %-awgt.lsts
+	echo "************** RECURSIVE MAKE **************"
+	$(MAKE) $(addsuffix .nolayout,$(filter $(addprefix $(DEVICE)/,$(addsuffix -%,$(<:-awgt.lsts=))), $(ALLRM_LSTS)))
+	echo "************** end of recursive make *******"
+	$(RM) single-am.ext-lstsonly single-am.rext.tmp
+	echo $(foreach am,$(^:.lsts=),\
+	  	$(shell echo $(am) | \
+	    	gawk '{am=$$1; print am" = \\\""am".lsts\\\""}')) >> single-am.ext-lstsonly
+	cat single-am.ext-lstsonly
+	#python $(TEMA_ENGINE_HOME)/modelutils/rextendedrules.py single-am.rext-lstsonly | grep '(' > single-am.ext-lstsonly
+	touch single-am.rext.tmp
+	echo $(foreach am,$(^:-awgt.lsts=),\
+	  	$(shell echo $(am) | \
+	    	gawk '{am=$$1; print am" = \\\""am"-awgt.lsts\\\""}')) >> single-am.rext.tmp
+	echo "ei pitaisi olla tyhja:"
+	cat single-am.rext.tmp
+
+	echo $(foreach rm,$(addsuffix .nolayout,$(filter $(addprefix $(DEVICE)/,$(addsuffix -%,$(<:-awgt.lsts=))), $(ALLRM_LSTS))),\
+		$(shell echo $(rm) | \
+		        gawk '{rm=$$1; key=rm; sub(".lsts","",key); sub("$(DEVICE)/","",key); \
+		               print key" = \\\""rm"\\\""}')) >> single-am.rext.tmp
+	@echo "single-am.rext.tmp"
+	@cat single-am.rext.tmp
+
+	cat single-am.rext.tmp $(PC_RULES_PATH)/GenericPCRules-single-am > single-am.rext
+	$(RM) single-am.rext.tmp single-am.rext-lstsonly
+
+	python $(TEMA_ENGINE_HOME)/modelutils/rextendedrules.py single-am.rext > single-am.ext-therest
+	# you might need this: cat single-am.ext-therest single-am.ext-lstsonly > single-am.ext
+	cat single-am.ext-therest > single-am.ext
+
+	tvt.extendedrules-nobuck single-am.ext - | tvt.parallel - > $@
+
+
+.PHONY: clean
+clean:
+	$(RM) $(RESULT) $(TASKSWITCHERGEN).lsts $(DEVICE)/$(TASKSWITCHERGENRM).lsts *Specific.lsts *SpecificTarget.lsts $(DEVICE)/*.lsts.nolayout rules.rext rules.rext-lstsonly rules.rext.tmp rules.ext-lstsonly rules.ext-therest wholemodel.lsts *.refined.lsts *-awgt.* *~
+
+toinfo:
+	echo "#Generated file" > tema_model.info
+	for am in $(ACTIONMACHINELIST); do echo "AM_LIST=$$am" >> tema_model.info; done
+	echo "DEVICE=$(DEVICE)" >> tema_model.info
+	echo "TASKSWITCHERGEN=$(TASKSWITCHERGEN)"  >> tema_model.info
+	echo "TASKSWITCHERGENRM=$(TASKSWITCHERGENRM)" >> tema_model.info
+
+
+include $(MAKEFILE_PATH)/GNUmakefile-utils.include

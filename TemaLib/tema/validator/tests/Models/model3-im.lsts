@@ -1,0 +1,50 @@
+Begin Lsts
+
+Begin History
+
+ 1
+ "model3-im.lsts"
+ "13.04.2007 13:13 <command line not given>"
+ "States: 5. Transitions: 5."
+
+End History
+
+Begin Header
+
+ State_cnt = 5
+ Action_cnt = 2
+ Transition_cnt = 5
+ Initial_states = 1;
+
+End Header
+
+Begin Action_names
+
+ 1 = "kw_DoSomething"
+ 2 = "kw_Perform <Action>"
+
+End Action_names
+
+Begin Transitions
+
+ 1: 2,1 3,2;
+ 2:;
+ 3: 4,2;
+ 4: 5,2;
+ 5:5,1{"271"};
+
+End Transitions
+
+Begin Layout
+
+ 1 128 192
+ 2 192 192
+ 3 128 128
+ 4 192 128
+ 5 192 64
+
+End Layout
+
+End Lsts
+
+ "Run time: less than 5 sec."

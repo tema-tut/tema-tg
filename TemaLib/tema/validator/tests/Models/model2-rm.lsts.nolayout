@@ -1,0 +1,27 @@
+Begin Lsts
+
+Begin History
+End History
+
+Begin Header
+ State_cnt = 4
+ Action_cnt = 4
+ Transition_cnt = 4
+ Initial_states = 1;
+End Header
+
+Begin Action_names
+ 1 = "start_awAction"
+ 2 = "kw_DoSomething $(x='§'; y='$('; z=')' + '$'; a.b(c))$"
+ 3 = "kw_DoSomethingElse §)$$(§"
+ 4 = "end_awAction"
+End Action_names
+
+Begin Transitions
+ 1: 2,1;
+ 2: 3,2;
+ 3: 4,3;
+ 4: 1,4;
+End Transitions
+
+End Lsts

@@ -1,0 +1,46 @@
+.TH TEMA.GENERATETESTCONF 1 local
+.SH NAME
+tema.generatetestconf \- Test configuration generator
+.SH SYNOPSIS
+.B tema.generatetestconf
+sourcedir configurationfile targetdir
+.SH DESCRIPTION
+.TP
+Generates a directory that includes models and data tables ready for a test
+run. The files are originally located in sourcedir.
+.SH ARGUMENTS
+.TP
+.B sourcedir
+Directory where model package contents are
+.B configurationfile
+Configuration file to use
+.B targetdir
+Directory where configured model will be copied
+.SH FILE FORMAT
+Example configuration file with two targets
+
+.nf
+    [targets: type]
+    Frank: N95
+    Emulator: Emulator21
+    
+    [targets: actionmachines[]]
+    Frank: Calendar%20-%20Create%20Entry.lsts, Calendar%20-%20Day%20View.lsts
+    Emulator: ExternalEvents%20-%20Network%20status.lsts, ExternalEvents%20-%20Startup.lsts
+    
+    [data: names[]]
+    datatables: Frank.td, Emulator.td, Calendar%20Past%20Dates.td
+    localizationtables: Emulator21.csv, N95.csv
+.fi
+.SH EXAMPLES
+Model is first configured and then composed:
+
+.nf
+    tema.generatetestconf . testconfiguration.conf targetdir
+    cd targetdir
+    tema.composemodel compose.conf
+.fi
+
+.SH SEE ALSO
+.IR tema.testengine (1),
+.IR tema.composemodel (1)

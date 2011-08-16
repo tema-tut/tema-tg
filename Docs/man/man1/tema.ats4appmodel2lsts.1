@@ -1,0 +1,45 @@
+.TH TEMA.ATS4APPMODEL2LSTS 1 local
+.SH NAME
+tema.ats4appmodel2lsts \- Convert ATS4 AppModel models to lsts models
+.SH SYNOPSIS
+.B tema.ats4appmodel2lsts
+.B filename
+.RB [ "options" ]
+.SH DESCRIPTION
+.I Tema.ats4appmodel2lsts
+is a tool used to convert ATS4 AppModel (http://ats4appmodel.sourceforge.net/)
+XML-based models to TEMA lsts-based models that are executable with the TEMA 
+test engine. The tool can be used both for creating a direct conversion or by 
+instrumenting it to transform the ATS4 System model into a task switcher, 
+allowing concurrent testing of application models.
+.SH ARGUMENTS
+.TP
+.B filename
+The input file is the system model xml-file of the ATS4 model. The rest of the
+ATS4 model is presumed to follow the regular ATS4 model directory hierarchy.
+.SH OPTIONS
+.TP
+.B \-h, \--help
+show help message and exit
+.TP
+.B \-o OUTDIR, \--output=OUTDIR
+Output path for the generated lsts model.
+.TP
+.B \--fullts
+Generate a task switcher model from the ATS4 AppModel system model including
+all states and transitions.
+.TP
+.B \-t, \--taskswitcher
+Generate simplified task switcher from the system model that includes
+activations between application models but omits all other states and 
+transitions.
+.TP
+.B \--generateSleep
+Generate sleepts/wakets transitions for tagged states
+.TP
+.B \--sleepByDefault
+Handle states with no CanSleep/CanNotSleep tag as CanSleeps
+
+.SH EXAMPLES
+.TP
+.B tema.ats4appmodel2lsts -o output_dir system_model.xml 

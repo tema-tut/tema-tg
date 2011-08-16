@@ -1,0 +1,54 @@
+Begin Lsts
+
+Begin History
+
+ 1
+ "model2-im.lsts"
+ "11.04.2007 12:07 <command line not given>"
+ "States: 6. Transitions: 6."
+
+End History
+
+Begin Header
+
+ State_cnt = 6
+ Action_cnt = 4
+ Transition_cnt = 6
+ Initial_states = 1;
+
+End Header
+
+Begin Action_names
+
+ 1 = "kw_DoSomething"
+ 2 = "kw_DoSomethingElse"
+ 3 = "~kw_DoSomethingElse"
+ 4 = "kw_PerformAction"
+
+End Action_names
+
+Begin Transitions
+
+ 1: 2,1;
+ 2: 3,2 4,3;
+ 3:;
+ 4: 5,1 6,4;
+ 5: 4,1;
+ 6:;
+
+End Transitions
+
+Begin Layout
+
+ 1 128 256
+ 2 192 256
+ 3 192 192
+ 4 256 256
+ 5 256 192
+ 6 256 320
+
+End Layout
+
+End Lsts
+
+ "Run time: less than 5 sec."

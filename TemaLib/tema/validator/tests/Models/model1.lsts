@@ -1,0 +1,57 @@
+Begin Lsts
+
+Begin History
+
+ 1
+ "model1.lsts"
+ "12.04.2007 12:36 <command line not given>"
+ "States: 6. Transitions: 17."
+
+End History
+
+Begin Header
+
+ State_cnt = 6
+ Action_cnt = 7
+ Transition_cnt = 17
+ Initial_states = 1;
+
+End Header
+
+Begin Action_names
+
+ 1 = "WAKEts"
+ 2 = "SLEEPts"
+ 3 = "awAction1"
+ 4 = "awAction2"
+ 5 = "ALLOW<ToStart>"
+ 6 = "SLEEPapp<ToModel2>"
+ 7 = "~awAction2"
+
+End Action_names
+
+Begin Transitions
+
+ 1:1,5{"249"} 2,1;
+ 2: 1,2 1,6 3,3;
+ 3:3,4{"91"} 2,7 4,3 5,2;
+ 4:4,4{"23"} 2,3 2,7 6,2;
+ 5: 3,1 1,5;
+ 6: 4,1 1,5;
+
+End Transitions
+
+Begin Layout
+
+ 1 0 128
+ 2 0 192
+ 3 0 256
+ 4 64 192
+ 5 -64 192
+ 6 64 128
+
+End Layout
+
+End Lsts
+
+ "Run time: less than 5 sec."

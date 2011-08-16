@@ -1,0 +1,65 @@
+[properties: value]
+version: 1.5.0
+
+
+[domain: value]
+cu_alias: Application
+launcherkeyword: --kw_LaunchApp\ '@APP'
+name: Test
+p_alias: Phone\ Model
+pf_alias: Platform
+st_alias: Phone
+targetingkeyword: kw_SetTarget\ @TARGET
+
+
+[productfamilies: name]
+1: S60
+
+
+[products: link, model, name, productfamily]
+2: \N/A, Basic\ Localization\ Table, E60, 1
+3: \N/A, Basic\ Localization\ Table, N95, 1
+20: \N/A, \N/A, N70, 1
+
+
+[concurrentunits: launchname, name]
+4: \0, Python
+5: Messaging, Messaging
+
+[concurrentunits: products[]]
+4: 3, 20
+5: 2, 3
+
+
+[actionmachines: concurrentunit, link, model, name]
+6: 4, \N/A, Model\ Designer\ Model, Main
+7: 5, \N/A, Model\ Designer\ Model, Main
+8: 5, \N/A, Model\ Designer\ Model, Sms
+9: 5, \N/A, Model\ Designer\ Model, Audio\ Message
+
+[actionmachines: dependencies[]]
+
+[actionmachines: requireddata[]]
+8: MessagingConstants, TextMessages
+
+
+[refinementmachines: actionmachine, link, model, product]
+10: 6, \N/A, Model\ Designer\ Model, 3
+11: 7, \N/A, Model\ Designer\ Model, 3
+12: 8, \N/A, Model\ Designer\ Model, 3
+13: 9, \N/A, Model\ Designer\ Model, 3
+14: 7, \N/A, Model\ Designer\ Model, 2
+15: 8, \N/A, Model\ Designer\ Model, 2
+21: 6, \N/A, Model\ Designer\ Model, 20
+
+
+[systemsundertest: name, product]
+16: David, 2
+17: Hayden, 3
+
+
+[datatables: link, model, name]
+18: \N/A, Basic\ Data\ Table, Messaging\ Constants
+19: \N/A, Basic\ Data\ Table, Python\ Constants
+22: \N/A, Basic\ Data\ Table, weird
+

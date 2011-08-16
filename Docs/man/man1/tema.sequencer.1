@@ -1,0 +1,36 @@
+.TH TEMA.SEQUENCER 1 local
+.SH NAME
+tema.sequencer \- Generate action sequence from log file
+.SH SYNOPSIS
+.B tema.sequencer
+[ logfilename ]
+.RB [ "options" ]
+.SH DESCRIPTION
+.I Tema.sequencer
+is used to generate action sequence from log produced by TEMA
+testengine. Resulting action sequence can be given to testengine in coveragereq
+parameter.
+.SH ARGUMENTS
+.TP
+.B logfilename
+Name of the log to sequence. If no filename is given or filename is -, reads 
+from standard input.
+.SH OPTIONS
+.B \-h, \--help
+Show help message and exit
+.TP
+.B \--aw-only
+Sequence only action words
+.SH EXAMPLES
+.nf
+Generate sequence from test log and start testengine with that sequence
+
+.ft B
+    tema.sequencer test.log > test.seq
+    tema.testengine --coverage=clparser --coveragereq-args=file:test.seq
+
+.ft R
+.SH SEE ALSO
+.IR tema.logreader (1),
+.IR tema.log2srt (1),
+.IR tema.testengine (1)
