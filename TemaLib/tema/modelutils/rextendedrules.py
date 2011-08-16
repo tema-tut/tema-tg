@@ -238,6 +238,7 @@ def rextendedrules(working_dir, parse_warnings,input_fileobj,output_fileobj):
     alphabets={}
     lstsnumber={}
     rules=[]
+    alreadyprintedrules={}
 
     # rules = [
     #  [ [ (quant,lstskey, actionname), ..., (quant,key_n, name_n) ],
@@ -445,6 +446,8 @@ def rextendedrules(working_dir, parse_warnings,input_fileobj,output_fileobj):
         else: # for-loop was not breaked out => rule does not contain regexps
             # it is ready to be printed
             rulestr=""
+            syncactions=[]
+            resultaction=""
             lstsappearances={}
             failed=0
             for quantifier,lstskey,actionname in r[0]:
@@ -452,11 +455,18 @@ def rextendedrules(working_dir, parse_warnings,input_fileobj,output_fileobj):
 
                 if actionname in alphabets[lstskey]:
                     thislsts=lstsnumber[parser.expand_evalexps(lstskey)]
-                    rulestr+='(%s,"%s") ' % (thislsts,parser.expand_evalexps(actionname))
+                    syncactions.append((thislsts,parser.expand_evalexps(actionname)))
                     lstsappearances[thislsts]=lstsappearances.get(thislsts,0)+1
                 else:
                     failed=1
             if not failed: # check that no LSTS appears in any line more than once
+                syncactions.sort()
+                resultaction=parser.expand_evalexps(r[1])
+                if str(syncactions)+resultaction in alreadyprintedrules:
+                    failed=1
+                else:
+                    alreadyprintedrules[str(syncactions)+resultaction]=1
+                    rulestr=' '.join(['(%s,"%s")' % (l,a) for l,a in syncactions])
                 if [ v for v in lstsappearances.values() if v>1 ]:
                     raise RextendedrulesError("the same LSTS synchronized more than once in rule:%s    '%s' (row %s)" % (os.linesep,rulestr,r[4]))
 #                    sys.stderr.write("ERROR: tvt.rextendedrules: the same LSTS synchronized more than once in rule:\n    '%s' (row %s)" % (rulestr,r[4]))
