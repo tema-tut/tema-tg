@@ -218,7 +218,6 @@ import os
 
 import tema.lsts.lsts as lsts
 
-
 # Rule syntax:
 reflags=re.DOTALL|re.MULTILINE
 tr_re=re.compile("([!]?)T\(\s*([^),]+)\s*,\s*([^),]+)\s*,\s*([^),]+)\s*\)",reflags)
@@ -264,8 +263,6 @@ def convert_to_regexp(s):
         return result_re
     except Exception,e:
         raise GTError("Not a valid regular expression: '%s'" % orig_str)
-#        error("Not a valid regular expression: '%s'" % orig_str)
-    
 
 class Transition(object):
     def __init__(self,source,action,dest):
@@ -353,9 +350,7 @@ class ReqRule(object):
             t=eval(self.expression)
         except Exception,e: 
             raise GTError("Cannot evaluate: '%s'" % self.expression)
-#            error("Cannot evaluate: '%s'" % self.expression)
         if not t in [True,False]:
-#            error("Expression '%s' did not return boolean value." % self.expression)
             raise GTError("Expression '%s' did not return boolean value." % self.expression)
         return t
 
@@ -370,8 +365,6 @@ class QRule(object):
         self.is_abstract=1
     def __str__(self):
         return 'Q[%s in %s]' % (self.variable,self.setdef)
-    
-    
 
 class PrintRule(object):
     """
@@ -440,10 +433,12 @@ def parse_rulestr(s):
                 return len(s)
         return 0
     # end of subfunction 
-    
+
     r=Rule()
 
+    s=s.replace('\\\n',' ').replace('\n',' ')
     s=s.lstrip()
+
     applym=apply_spec_re.match(s)
     if applym:
         r.apply_spec=applym.group(1)
@@ -454,7 +449,6 @@ def parse_rulestr(s):
     o=separator.match(s)
     if not o:
         raise GTError("Parse error: '->' missing in rule '%s'" % s)
-#        error("Parse error: '->' missing in rule '%s'" % s)
     slhs=o.group(1)
     srhs=o.group(2)
 
@@ -662,8 +656,6 @@ def instantiate_trrule(lstsdata,r,which_hand_side,next_regex):
                 else:
                     raise GTError("Cannot use free variable as the action " +
                                   "name on the right hand side: %s" % r)
-#                    error("Cannot use free variable as the action name "+
-#                          "on the right hand side: %s" % r)
         # Second, try if the position contains regular expressions
         elif re_regexps.search(contents):
             regex=convert_to_regexp(contents)
@@ -733,7 +725,6 @@ def instantiate_trrule(lstsdata,r,which_hand_side,next_regex):
     # Now rule r specifies unambiguously a single transition
     return {},[r],next_regex
 
-
 def instantiate_qrule(lstsdata,r,which_hand_side,next_regex):
     """
     returns retdict, retlist, next_regex
@@ -786,8 +777,6 @@ def instantiate_prrule(lstsdata,r,which_hand_side,next_regex):
                 else:
                     raise GTError("Cannot use free variable as proposition name "+
                           "on the right hand side: %s" % contents)
-#                    error("Cannot use free variable as proposition name "+
-#                          "on the right hand side: %s" % contents)
         # Second, try if the position contains regular expressions
         elif re_regexps.search(contents):
             regex=convert_to_regexp(contents)
@@ -948,7 +937,6 @@ def instantiate_rule(lstsdata,absrule):
                         # It seems that someone is quantifying over an empty
                         # set. Bad.
                         raise GTError("Cannot quantify over an empty set. Rule: %s" % element)
-#                        error("Cannot quantify over an empty set. Rule: %s" % element)
                     # we are dealing with a concrete element
                     if newelements and not element.neg:
                         # element matches and is not a negation,
@@ -1013,7 +1001,6 @@ def instantiate_rule(lstsdata,absrule):
 
     return concrete_rules
 
-
 def apply_rules(rules,lstsdata):
     tr_hash,pr_hash={},{}
     for r in rules:
@@ -1025,12 +1012,13 @@ def apply_rules(rules,lstsdata):
                     if '"%s"'%t.action==ac and '"%s"'%t.dest==ds: break
                 else: # for loop not breaked -> no transition found
                     continue
-                # debugmsg("removing %s" % t)
                 lstsdata.tr_by_ss[ss].remove(t)
             elif isinstance(remove_obj,PRRule):
                 # Find and remove proposition from a state:
                 for pr in lstsdata.pr_by_st[remove_obj.state]:
-                    if '"%s"'%pr.prop==remove_obj.prop: break
+                    if '"%s"'%pr.prop==remove_obj.prop:
+                        lstsdata.pr_by_st[remove_obj.state].remove(pr)
+                        break
                 else: # for loop not breaked -> no proposition found.
                     continue
 
@@ -1050,9 +1038,7 @@ def apply_rules(rules,lstsdata):
                 except KeyError: lstsdata.pr_by_st[st]=[Proposition(st[1:-1],pr[1:-1])]
     return lstsdata
 
-
 def parse_args(argv):
-
     global version
 
     argv=argv[1:]
@@ -1115,7 +1101,6 @@ def gt(input_fileobj,output_fileobj,keep_labels,rules):
         except Exception,e:
             raise GTError("Could not read input lsts from '%s'%s%s" % \
                               (str(input_fileobj),os.linesep,e))
-#            error("Could not read input lsts from '%s'\n%s"%(input_fileobj.name,e))
     
     # the rest of command line arguments are handled as rules.
 
@@ -1170,7 +1155,6 @@ if __name__=='__main__':
 
     try:
         try:
-
             if input_filename == "-":
                 infile = sys.stdin
             elif input_filename == None:
