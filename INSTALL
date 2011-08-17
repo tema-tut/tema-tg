@@ -1,0 +1,94 @@
+####################
+TEMA-TG Installation
+####################
+
+Development environment
+=======================
+
+TEMA-TG includes helper program **tema** that can be used during development.
+Helper-program only works on Unix-compatible operating systems.
+Tema-program allows to use any program included without installing package. 
+Only thing that is required, is to create symbolic link from 
+*TemaLib/tema/tematool.py* to *tema* and to add *tema* to PATH. For example::
+
+  $ cd ~
+  $ tar xzf tema-tg-3.2.tar.gz
+  $ ln -s ~/tema-tg-3.2/TemaLib/tema/tematool.py ~/bin/tema
+
+After that it is possible to start programs with syntax *tema COMMAND*. ::
+
+  $ tema testengine
+
+
+Installation from Source
+========================
+
+tema-tg is a normal python program and can be installed with normal commands::
+
+  $ python setup.py build
+  $ python setup.py install
+
+Alternatively Debian or RPM packages can be used.
+
+Debian Installation
+===================
+
+TEMA Testengine can be installed with following commands::
+
+  $ dpkg -i tema-tg-VERSION.deb
+
+Packaging
+=========
+
+Source packages
++++++++++++++++
+
+Makefile is included that can be used to build source distribution packages::
+
+  $ make source
+
+Alternatively setup.py can be used directly to generate source package::
+
+  $ python setup.py sdist
+
+Generated packages will be in directory **dist**.
+
+Debian packages
++++++++++++++++
+
+Source package includes necessary files for building Debian packages. Makefile
+is included that can be used to build Debian packages::
+
+  $ make builddeb
+
+Generated packages will be in directory **debbuild**.
+
+RPM packages
+++++++++++++
+
+Source package includes necessary files for building RPM packages. Makefile
+is included that can be used to build RPM packages::
+
+  $ make buildrpm
+
+Generated packages will be in directory **dist**.
+
+API Documentation
+=================
+
+API documentation can be generated with `epydoc`_::
+
+  $ make apidoc
+
+Epydoc writes html-documentation to directory *TemaLib/apidoc*.
+
+.. _epydoc: http://epydoc.sourceforge.net/
+
+TEMAGUI Compatible installation
+===============================
+
+Temagui requires shell-account with ssh-access and installation to one of the 
+following prefixes:
+
+- /usr/
+- /usr/local/
