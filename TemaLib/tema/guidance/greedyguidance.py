@@ -37,7 +37,7 @@ Greedy guidance reads the following parameter values:
   The maximum amount of time in seconds a single search can last.
 """
 
-version='wormguidance based on greedyguidance: 0.beta'
+version='greedyguidance: 1.0'
 
 from tema.guidance.guidance import Guidance as GuidanceBase
 from tema.model.model import Transition
