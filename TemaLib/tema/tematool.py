@@ -55,9 +55,7 @@ mocksut_path =  os.path.join(tema_path,"MockSUT")
 man_path = os.path.join(os.path.join(strip_path(tema_path, "TemaLib"), "Docs"),"man")
 
 if tema_path not in sys.path:
-    sys.path.reverse()
-    sys.path.append(tema_path)
-    sys.path.reverse()
+    sys.path.insert(0,tema_path)
 
 command_set = dict()
 command_set['testengine'] = "testengine.testengine"
@@ -69,7 +67,7 @@ exec_commands = set([ "xsimulate", "simulate", "validate","analysator","runmodel
 exec_commands.update(logtools)
 
 modelutils_commands = set(["generatetaskswitcher","gt","rextendedrules","renamerules","composemodel","specialiser","generatetestconf"])
-other_commands = set(["modelutils","engine_home","packagereader","ats4appmodel2lsts","variablemodelcreator","filterexpand","model2lsts","do_python","do_make"])
+other_commands = set(["modelutils","engine_home","packagereader","ats4appmodel2lsts","variablemodelcreator","filterexpand","model2lsts","do_python","do_make", "batch"])
 other_commands.update(modelutils_commands)
 
 help_commands_exceptions = dict()
@@ -93,6 +91,15 @@ def print_usage(path,exec_commands,other_commands,command_set):
 if len(sys.argv) < 2 :
     print_usage(argv0,exec_commands,other_commands,command_set)
     raise SystemExit(1)
+
+
+def execToPython(cmd):
+    environment = os.environ
+    environment['PYTHONPATH'] = ":".join(sys.path)
+    path = tema_path + cmd # "/tema/packagereader/packagereader.py"
+    args = sys.argv
+    args[0] = path
+    os.execve( path, args, environment )
 
 
 sys.argv[0:1]=[]
@@ -207,12 +214,9 @@ except KeyError:
             os.execve( path, args, environment )
 
         elif sys.argv[0] == "packagereader" :
-            environment = os.environ
-            environment['PYTHONPATH'] = ":".join(sys.path)
-            path = tema_path + "/tema/packagereader/packagereader.py"
-            args = sys.argv
-            args[0] = path
-            os.execve( path, args, environment )
+            execToPython( "/tema/packagereader/packagereader.py" )
+        elif sys.argv[0] == "batch" :
+            execToPython( "/tema/GUI/batch.py" )
         elif sys.argv[0] == "variablemodelcreator" :
             environment = os.environ
             environment['PYTHONPATH'] = ":".join(sys.path)
