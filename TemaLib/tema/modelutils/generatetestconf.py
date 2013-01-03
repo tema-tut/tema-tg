@@ -24,7 +24,7 @@
 """
 Test configuration generator
 
-Usage: generateTestconf sourcedir testconfigurationfile targetdir
+Usage: generateTestconf sourcedir testconfigurationfile targetdir [modelvardefs]
 
 Generates a directory that includes models and data tables ready for a
 test run. The files are originally located in sourcedir.
@@ -33,9 +33,11 @@ test run. The files are originally located in sourcedir.
 import tema.eini.einiparser as einiparser
 import shutil
 import os
+import re
 import stat
 import sys
 import tema.lsts.lsts as lsts
+import tema.modelvars.modelvars as modelvars
 
 multipart_contents = r"""
 [targets: type]
@@ -238,7 +240,7 @@ def generate_synchronizer_rm(iterable_target_names):
     return outlsts
 
 
-def copy_files(filelist, targetdir, rename_attarget_to=None, allow_nonexistence=False):
+def copy_files(filelist, targetdir, rename_attarget_to=None, allow_nonexistence=False, modelvar_vals=None):
     """filelist is a list of strings, targetdir a string"""
     for f in filelist:
         try: file(f)
@@ -247,19 +249,50 @@ def copy_files(filelist, targetdir, rename_attarget_to=None, allow_nonexistence=
             elif e.errno==2 and allow_nonexistence: continue # file does not exist
             else: raise e
         try:
-            if rename_attarget_to==None:
+            if rename_attarget_to==None and modelvar_vals == None:
                 shutil.copy(f, targetdir)
             else:
-                new_contents = file(f).read().replace('@TARGET',rename_attarget_to)
-                # this might be removable code...
-                # new_contents = new_contents.replace('"SLEEPapp<','"SLEEPapp<%s: ' % (rename_attarget_to,))
-                # new_contents = new_contents.replace('"WAKEapp<','"WAKEapp<%s: ' % (rename_attarget_to,))
-                # new_contents = new_contents.replace('"REQ<','"REQ<%s: ' % (rename_attarget_to,))
-                # new_contents = new_contents.replace('"REQALL<','"REQALL<%s: ' % (rename_attarget_to,))
-                # new_contents = new_contents.replace('"ALLOW<','"ALLOW<%s: ' % (rename_attarget_to,))
-                # new_contents = new_contents.replace('"SLEEPts"','"SLEEPts<%s>"' % (rename_attarget_to,))
-                # new_contents = new_contents.replace('"WAKEts"','"WAKEts<%s>"' % (rename_attarget_to,))
-                file(targetdir+"/"+f[f.rfind('/')+1:],"w").write(new_contents)
+                contents = file(f).read()
+                if rename_attarget_to != None:
+                    contents = contents.replace('@TARGET',rename_attarget_to)
+
+                if modelvar_vals != None:
+                    fname = ''
+                    esc = ''
+                    for c in f[f.rfind('/')+1:]:
+                        if c == '%' or esc != '':
+                            esc += c
+                        if esc == '':
+                            fname += c
+                        elif len(esc) == 3:
+                            fname += chr(int(esc[1:], 16))
+                            esc = ''
+
+                    pat = re.compile(r"<@[a-zA-Z0-9_]*>")
+                    vars = []
+                    match = pat.search(fname)
+                    while match != None:
+                        vars.append(match.group()[2:-1])
+                        match = pat.search(fname, match.end())
+
+                    val_sets = modelvars.get_values(modelvar_vals[0], modelvar_vals[1], vars)
+                    var_indices = {}
+                    for i in range(len(vars)):
+                        var_indices[vars[i]] = i
+
+                    for vals in val_sets:
+                        new_name = fname
+                        new_contents = contents
+                        for i in range(len(vars)):
+                            new_name = new_name.replace('<@' + vars[i] + '>', str(vals[i]))
+                            new_contents = new_contents.replace('@' + vars[i], str(vals[i]))
+
+                        new_name = reduce(lambda s1, s2: s1 + s2, [c if (c.isalnum() or "_-.".find(c) != -1) else ('%' + hex(ord(c))[2:]) for c in new_name])
+
+                        file(targetdir+"/"+new_name,"w").write(new_contents)
+
+                else:
+                    file(targetdir+"/"+f[f.rfind('/')+1:],"w").write(contents)
                     
         except IOError:
             error("Failed to copy file %s to directory %s" % (f,targetdir))
@@ -284,11 +317,21 @@ def create_file(filename, file_contents):
         error("Failed to create file %s, %s" % (filename,e))
 
 
-def generatetestconf(sourcedir,testconfigurationfile,targetdir):
+def generatetestconf(sourcedir,testconfigurationfile,targetdir,var_file=None):
 
     targetdir = os.path.abspath(targetdir)
     result = einiparser.Parser().parse(file(testconfigurationfile))
     result['targets'], result['data']['datatables'], result['data']['localizationtables']
+
+    if var_file != None:
+        f = open(var_file)
+        try:
+            var_def = f.read()
+        finally:
+            f.close()
+        var_vals = modelvars.parse_vars(var_def)
+    else:
+        var_vals = None
 
     assert('type' in result['targets'].fields())
     assert('actionmachines' in result['targets'].fields())
@@ -314,15 +357,18 @@ def generatetestconf(sourcedir,testconfigurationfile,targetdir):
         for target in result['targets']:
             copy_files(result['targets'][target]['actionmachines'],
                        targetdir+"/"+target,
-                       rename_attarget_to = target)
+                       rename_attarget_to = target,
+                       modelvar_vals = var_vals)
 
             copy_files([f.rsplit('.', 1)[0] + '.info' for f in result['targets'][target]['actionmachines']],
-                       targetdir+"/"+target)
+                       targetdir+"/"+target,
+                       modelvar_vals = var_vals)
 
             copy_files([result['targets'][target]['type']+"/"+f
                         for f in os.listdir(result['targets'][target]['type'])],
                        targetdir+"/"+target+"/rm",
-                       rename_attarget_to = target)
+                       rename_attarget_to = target,
+                       modelvar_vals = var_vals)
 
             # Multipart conffile for model composing
             am = ",".join(result['targets'][target]['actionmachines'])
@@ -355,7 +401,8 @@ def main():
         generatetestconf(*sys.argv[1:])
     except Exception, e:
         print __doc__
-        error("Error: %s" % e)
+        if len(sys.argv) != 1:
+            error("Error: %s" % e)
 
 if __name__ == '__main__':
     main()
