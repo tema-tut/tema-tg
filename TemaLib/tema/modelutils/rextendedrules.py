@@ -466,7 +466,7 @@ def rextendedrules(working_dir, parse_warnings,input_fileobj,output_fileobj):
                     failed=1
                 else:
                     alreadyprintedrules[str(syncactions)+resultaction]=1
-                    rulestr=' '.join(['(%s,"%s")' % (l,a) for l,a in syncactions])
+                    rulestr=' '.join(['(%s,"%s") ' % (l,a) for l,a in syncactions])
                 if [ v for v in lstsappearances.values() if v>1 ]:
                     raise RextendedrulesError("the same LSTS synchronized more than once in rule:%s    '%s' (row %s)" % (os.linesep,rulestr,r[4]))
 #                    sys.stderr.write("ERROR: tvt.rextendedrules: the same LSTS synchronized more than once in rule:\n    '%s' (row %s)" % (rulestr,r[4]))
