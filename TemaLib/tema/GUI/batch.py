@@ -78,6 +78,7 @@ can be run with a command:
 import sys
 import os
 import subprocess
+import urllib
 import tema.packagereader.packagereader as packagereader
 import tema.modelutils.generatetestconf as generatetestconf
 import tema.modelutils.composemodel as composemodel
@@ -143,6 +144,8 @@ def set_domain_products():
     Parameters.datatables=dict()
     dts=do_pkg_query("datatables")
     for dt in dts :
+        if len(dt) < 1 :
+            continue
         dt_name = do_pkg_query("logicalname", dt)[0]
         Parameters.datatables[dt_name] = dt
         # print dt,":", dt_name
@@ -161,8 +164,16 @@ def set_domain_products():
     #print repr(Parameters.products)
 
 
+def quoted_string(sss):
+    temppi = urllib.quote(sss)
+    idx = temppi.find('%')
+    while 0 <= idx :
+        temppi = temppi[:idx]+temppi[idx:idx+3].lower()+temppi[idx+3:]
+        idx = temppi.find('%',idx+1)
+    return temppi
+
 def append_lstses(lstses, unit, comps):
-    lstses.extend( [ ("%s - %s.lsts" % (unit, cm) ).replace(' ', "%20") \
+    lstses.extend( [ quoted_string("%s - %s.lsts" % (unit, cm) ) \
                      for cm in comps ] )
     return None
 
@@ -178,12 +189,16 @@ def get_components( prod, unit, lstses, datatbls):
     return lstses
 
 def get_datatables(dts):
-    return [ ( "%s.td" % dt ).replace(' ', '%20') for dt in dts  ]
+    return [ ( "%s.td" % dt ).replace(' ', '%20') for dt in dts if len(dt) > 0 ]
 
 class TestTarget:
     def __init__(self, trg):
         self.target_id = trg
         self.product = Parameters.dev_map[trg]
+        if len(self.target_id) < 1 :
+            self.target_tag=self.product
+        else:
+            self.target_tag=self.target_id
         self.apps= list()
 
     def addApp(self, app_name):
@@ -200,7 +215,7 @@ def write_config(*targets):
     with file("testiconffi.conf", "w") as conffi :
         print >> conffi, "[targets: type]"
         for trg in targets:
-            print >> conffi, "%s: %s" % (trg.target_id, trg.product)
+            print >> conffi, "%s: %s" % (trg.target_tag, trg.product)
             products.add(trg.product)
             datatables.add(trg.target_id)
         print >> conffi, "[targets: actionmachines[]]"
@@ -208,7 +223,7 @@ def write_config(*targets):
             lstses = list()
             for unt in trg.apps :
                 get_components( trg.product, unt, lstses, datatables )
-            print >> conffi, "%s: %s" % ( trg.target_id,
+            print >> conffi, "%s: %s" % ( trg.target_tag,
                                           ", ".join( lstses ) )
         print >> conffi, "[data: names[]]"
         print >> conffi, "datatables:",\
@@ -275,14 +290,22 @@ if "__main__" == __name__ :
         if entry.find('#') == 0 :
             continue
 
+        modelvardefs=None
+
         if entry.find("--") == 0 :
-            engine_prms.append(entry)
+            if entry.find("--modelvardefs") == 0 :
+                idx=entry.find("=")
+                modelvardefs=entry[idx+1:].strip()
+            else:
+                engine_prms.append(entry)
             if entry.find("--testdata") == 0 :
                 Parameters.emit_dts = False
             if entry.find("testadapter") > 0 :
                 engine_prms.append("--adapter-args=model:combined-rules.ext")
             if entry.find("randomguidance") > 0 :
                 engine_prms.append("--coveragereq=")
+            if entry.find("guiguidance") > 0 :
+                engine_prms.append("--adapter-args=")
 
         else :
             items=entry.split(';')
@@ -302,8 +325,23 @@ if "__main__" == __name__ :
     used_datatables = write_config(*targets)
     write_params(engine_prms, used_datatables)
 
-    generatetestconf.generatetestconf("Model", "testiconffi.conf", "TestModel")
-    composemodel.compose_model("TestModel", "compose.conf")
+    generatetestconf.generatetestconf("Model", "testiconffi.conf", "TestModel",
+                                      modelvardefs)
+
+    # composemodel.compose_model("TestModel", "compose.conf")
+    # compose_model is out of date: It does not work with parametriced models.
+    # using command: tema do_make
+    # this is somewhat gludge. It should make difference between
+    # "tema <command>" and "tema.<command>"
+    try:
+        os.chdir("TestModel")
+        cmdline=["tema", "do_make"]
+        make=subprocess.Popen(cmdline)
+        res=make.wait()
+    finally:
+        os.chdir("..")
+
+
     print "\nDone: Configured test model in directory TestModel"
 
     res = 0
