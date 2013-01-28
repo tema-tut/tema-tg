@@ -77,8 +77,10 @@ can be run with a command:
 
 import sys
 import os
+import stat
 import subprocess
 import urllib
+import zipfile
 import tema.packagereader.packagereader as packagereader
 import tema.modelutils.generatetestconf as generatetestconf
 import tema.modelutils.composemodel as composemodel
@@ -263,6 +265,24 @@ if "__main__" == __name__ :
         print __doc__
         raise SystemExit(0)
 
+    Parameters.modelDir = "Model"
+    Parameters.modelDirExists = False
+    try:
+        Parameters.modelDirExists = stat.S_ISDIR(os.stat(Parameters.modelDir).st_mode)
+    except:
+        pass
+
+    if not Parameters.modelDirExists :
+        for param in sys.argv:
+            if (param.find("--") != 0) and (param.find(".zip") > 1) :
+                archive=None
+                try:
+                    os.mkdir(Parameters.modelDir)
+                    archive=zipfile.ZipFile(param,'r')
+                    archive.extractall(path=Parameters.modelDir)
+                finally:
+                    if archive :
+                        archive.close()
     set_domain_file_name()
     set_domain_name()
     set_domain_products()
