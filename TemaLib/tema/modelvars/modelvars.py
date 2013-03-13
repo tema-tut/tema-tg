@@ -127,11 +127,11 @@ def parse_vars(raw_var_defs):
 
 
 
-def get_values(values_all, values_comb, vars):
-	vars = tuple(vars)
+def get_values(values_all, values_comb, vars_orig):
+	vars_sorted = tuple(sorted(vars_orig))
 
 	values_set = set([()])
-	for var in vars:
+	for var in vars_sorted:
 		next_values_set = set()
 		for var_val in values_all.get(var, []):
 			for prev_val in values_set:
@@ -139,7 +139,7 @@ def get_values(values_all, values_comb, vars):
 		values_set = next_values_set
 
 	var_subsets = set()
-	next_subsets = set([vars])
+	next_subsets = set([vars_sorted])
 	while next_subsets != set([()]):
 		var_subsets |= next_subsets
 		prev_subsets = next_subsets
@@ -149,8 +149,8 @@ def get_values(values_all, values_comb, vars):
 				next_subsets.add(subset[:i] + subset[i+1:])
 
 	var_indices = {}
-	for i in range(len(vars)):
-		var_indices[vars[i]] = i
+	for i in range(len(vars_sorted)):
+		var_indices[vars_sorted[i]] = i
 
 	for var_subset in var_subsets:
 		combinations = values_comb.get(var_subset, None)
@@ -166,5 +166,7 @@ def get_values(values_all, values_comb, vars):
 					new_values.add(values)
 
 			values_set = new_values
+	
+	unsorted_values = [tuple([values[var_indices[var]] for var in vars_orig]) for values in values_set]
 
-	return values_set
+	return set(unsorted_values)
